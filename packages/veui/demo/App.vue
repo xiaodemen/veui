@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav id="main-nav">
-      <h1>VEUI components</h1>
+      <h1><a href="https://github.com/ecomfe/veui/">VEUI components</a></h1>
       <ul>
         <li v-for="(route, index) in routes" :key="index"><router-link :to='route'>{{route.name}}</router-link></li>
       </ul>
@@ -66,6 +66,10 @@ export default {
     margin: 0;
     padding: 0 24px;
     font-size: 18px;
+
+    a {
+      text-decoration: none;
+    }
   }
 
   ul {
