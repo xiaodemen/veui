@@ -1,61 +1,61 @@
 <template>
-  <div class="veui-searchbox"
-    :class="{'veui-disabled': realDisabled, 'veui-readonly': realReadonly, 'veui-focus': inputFocus,
-      'veui-searchbox-suggestion-expanded': expanded}"
-    :ui="ui"
-    @click="handleClickBox"
+<div class="veui-searchbox"
+  :class="{'veui-disabled': realDisabled, 'veui-readonly': realReadonly, 'veui-focus': inputFocus,
+    'veui-searchbox-suggestion-expanded': expanded}"
+  :ui="ui"
+  @click="handleClickBox"
+>
+  <veui-input
+    ref="input"
+    :name="realName"
+    :readonly="realReadonly"
+    :disabled="realDisabled"
+    v-bind="attrs"
+    v-model="localValue"
+    @input="handleInput"
+    @focus="inputFocus = true"
+    @blur="handleBlur"
   >
-    <veui-input
-      ref="input"
-      :name="realName"
-      :readonly="realReadonly"
-      :disabled="realDisabled"
-      v-bind="attrs"
-      v-model="localValue"
-      @input="handleInput"
-      @focus="inputFocus = true"
-      @blur="handleBlur"
-    >
-    </veui-input>
-    <div class="veui-searchbox-others"
-        :class="{'veui-searchbox-placeholder-hide': !placeholderShown}">
-      <div class="veui-searchbox-placeholder">{{ placeholder }}</div>
-      <div class="veui-searchbox-icons">
-        <button class="veui-searchbox-icon veui-searchbox-icon-cross"
-          :readonly="realReadonly"
-          :disabled="realDisabled"
-          v-if="localValue"
-          @click.stop="localValue = ''">
-          <icon name="cross-small"></icon>
-        </button>
-        <button class="veui-searchbox-icon veui-searchbox-icon-search"
-          :readonly="realReadonly"
-          :disabled="realDisabled"
-          @click.stop="search">
-          <icon name="search"></icon>
-        </button>
-      </div>
+  </veui-input>
+  <div class="veui-searchbox-others"
+      :class="{'veui-searchbox-placeholder-hide': !placeholderShown}">
+    <div class="veui-searchbox-placeholder">{{ placeholder }}</div>
+    <div class="veui-searchbox-icons">
+      <button class="veui-searchbox-icon veui-searchbox-icon-cross"
+        :readonly="realReadonly"
+        :disabled="realDisabled"
+        v-if="localValue"
+        @click.stop="localValue = ''">
+        <icon name="cross-small"></icon>
+      </button>
+      <button class="veui-searchbox-icon veui-searchbox-icon-search"
+        :readonly="realReadonly"
+        :disabled="realDisabled"
+        @click.stop="search">
+        <icon name="search"></icon>
+      </button>
     </div>
-    <veui-overlay
-      target="input"
-      :options="overlay"
-      :open="expanded">
-      <div class="veui-searchbox-suggestion-overlay"
-        ref="box"
-        :ui="ui"
-        v-outside:input="close">
-        <template v-for="(item, index) in suggestions">
-          <div class="veui-searchbox-suggestion-item"
-            :key="index"
-            @click="selectSuggestion(item.value)">
-            <slot name="item" v-bind="item">
-              {{ item.value }}
-            </slot>
-          </div>
-        </template>
-      </div>
-    </veui-overlay>
   </div>
+  <veui-overlay
+    target="input"
+    :options="overlay"
+    :open="expanded">
+    <div class="veui-searchbox-suggestion-overlay"
+      ref="box"
+      :ui="ui"
+      v-outside:input="close">
+      <template v-for="(item, index) in suggestions">
+        <div class="veui-searchbox-suggestion-item"
+          :key="index"
+          @click="selectSuggestion(item.value)">
+          <slot name="item" v-bind="item">
+            {{ item.value }}
+          </slot>
+        </div>
+      </template>
+    </div>
+  </veui-overlay>
+</div>
 </template>
 
 <script>
@@ -117,12 +117,15 @@ export default {
     },
     realExpanded (value) {
       this.expanded = this.realExpanded
+    },
+    localValue (value) {
+      this.$emit('input', value)
     }
   },
   methods: {
-    handleInput (value, $event) {
+    handleInput () {
       this.hideSuggestion = false
-      this.$emit('input', value, $event)
+      // 感知输入法情况下处理placeholder逻辑暂时还没有
     },
     handleClickBox () {
       if (!this.realDisabled && !this.realReadonly) {

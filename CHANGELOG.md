@@ -1,7 +1,12 @@
 ### 0.2.2
 
-* [^] `SearchBox` 重命名为 `Searchbox`。**[Breaking change]**
 * [+] 增加 `$alert`、`$confirm`、`$prompt` 插件。
+* [+] 增加 `RegionPicker` 组件。
+* [^] `SearchBox` 重命名为 `Searchbox`。**[Breaking change]**
+* [^] 去除 `Breadcrumb`、`Table`、`Tabs` 中对 Vue 内部函数的依赖。
+* [+] 为 `Overlay` 组件增加 `open.sync` 支持。
+* [^] 修复 `outside` 指令重复添加事件绑定的问题。
+* [^] 修复 `Calendar` 组件年份选择视图前后选择不正确的问题。
 
 ### 0.2.1
 
