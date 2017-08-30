@@ -1,25 +1,25 @@
 <template>
-<div class="veui-regionpicker">
-  <div v-for="(section, si) in localDatasource" class="veui-regionpicker-section" :key="si">
-    <div class="veui-regionpicker-section-title">
+<div class="veui-region-picker">
+  <div v-for="(section, si) in localDatasource" class="veui-region-picker-section" :key="si">
+    <div class="veui-region-picker-section-title">
       <veui-checkbox :checked="section.selected" :indeterminate="section.indeterminate"
         :readonly="realReadonly" :disabled="realDisabled"
         @change="checked => toggleNode(section, checked)">
         <slot name="label" v-bind="section" :level="0">{{ section.label }}</slot>
       </veui-checkbox>
     </div>
-    <div v-if="section.children" class="veui-regionpicker-section-content">
-      <div v-for="(branch, bi) in section.children" class="veui-regionpicker-branch" :key="bi">
-        <div class="veui-regionpicker-branch-title">
+    <div v-if="section.children" class="veui-region-picker-section-content">
+      <div v-for="(branch, bi) in section.children" class="veui-region-picker-branch" :key="bi">
+        <div class="veui-region-picker-branch-title">
           <veui-checkbox :checked="branch.selected" :indeterminate="branch.indeterminate"
             :readonly="realReadonly" :disabled="realDisabled"
             @change="checked => toggleNode(branch, checked)">
             <slot name="label" v-bind="branch" :level="1">{{ branch.label }}</slot>
           </veui-checkbox>
         </div>
-        <div v-if="branch.children" class="veui-regionpicker-branch-content">
-          <div v-for="(group, gi) in branch.children" class="veui-regionpicker-group" :key="gi">
-            <div class="veui-regionpicker-group-title">
+        <div v-if="branch.children" class="veui-region-picker-branch-content">
+          <div v-for="(group, gi) in branch.children" class="veui-region-picker-group" :key="gi">
+            <div class="veui-region-picker-group-title">
               <veui-checkbox :ref="`group-${si}-${bi}-${gi}`" :checked="group.selected"
                 :readonly="realReadonly" :disabled="realDisabled"
                 :indeterminate="group.indeterminate" @change="checked => toggleNode(group, checked)"
@@ -32,7 +32,7 @@
                   targetAttachment: 'bottom left',
                   constraints
                 }">
-                <div class="veui-regionpicker-units"
+                <div class="veui-region-picker-units"
                   :ref="`layer-${si}-${bi}-${gi}`"
                   v-outside="{
                     handler: () => { toggleActive(group, false) },
@@ -41,8 +41,8 @@
                     delay: 200
                   }">
                   <template v-for="ri in Math.ceil(group.children.length / 3)">
-                    <div class="veui-regionpicker-unit-row" :key="ri">
-                      <div v-for="(unit, ui) in group.children.slice(ri * 3 - 3, ri * 3)" class="veui-regionpicker-unit" :key="ui">
+                    <div class="veui-region-picker-unit-row" :key="ri">
+                      <div v-for="(unit, ui) in group.children.slice(ri * 3 - 3, ri * 3)" class="veui-region-picker-unit" :key="ui">
                         <veui-checkbox :checked="unit.selected" :indeterminate="unit.indeterminate"
                           :readonly="realReadonly" :disabled="realDisabled"
                           @change="checked => toggleNode(unit, checked)">
@@ -54,12 +54,12 @@
                 </div>
               </veui-overlay>
               <veui-overlay v-if="group.children && group.active" :open.sync="group.active"
-                overlayClass="veui-regionpicker-group-shadow-overlay"
+                overlayClass="veui-region-picker-group-shadow-overlay"
                 :target="`group-${si}-${bi}-${gi}`" :options="{
                   attachment: 'top left',
                   targetAttachment: 'top left'
                 }">
-                <div class="veui-regionpicker-group-shadow"
+                <div class="veui-region-picker-group-shadow"
                   :ref="`shadow-${si}-${bi}-${gi}`"
                   v-outside="{
                     handler: () => { toggleActive(group, false) },
@@ -95,7 +95,7 @@ import { cloneDeep, pick } from 'lodash'
 import Vue from 'vue'
 
 export default {
-  name: 'veui-regionpicker',
+  name: 'veui-region-picker',
   components: {
     'veui-checkbox': Checkbox,
     'veui-overlay': Overlay
@@ -112,47 +112,14 @@ export default {
     includeIndeterminate: Boolean
   },
   data () {
-    let localSelected = [...(this.selected || [])]
-    let selectedMap = localSelected.reduce((result, current) => {
-      result[current] = true
-      return result
-    }, {})
-
-    // { id, label, children, selected, indeterminate, parent }
-    let localDatasource = cloneDeep(this.datasource)
-    walk(localDatasource, {
-      enter ({ node, parent }) {
-        node.selected = false
-        node.solidCount = 0 // deteminately selected child count
-        node.softCount = 0 // indeterminately selected child count
-        node.indeterminate = false
-        node.parent = parent
-      },
-      exit ({ node, parent }) {
-        if (!node.id && !(node.children && node.children.length)) {
-          // invalid node
-          Vue.util.warn(`Invalid region tree node '${node.label}'. Provide \`id\`, \`children\` or both.`)
-          return
-        }
-
-        // get select state for self
-        if (node.id) {
-          // check select state from `selected`
-          node.selected = !!selectedMap[node.id]
-        }
-
-        // infer state from children
-        updateNode(node)
-      }
-    })
     return {
-      localDatasource,
-      localSelected,
+      localSelected: [...(this.selected || [])],
+      localDatasource: null,
       constraints: [
-        {
-          to: 'scrollParent',
-          attachment: 'together'
-        },
+        // {
+        //   to: 'scrollParent',
+        //   attachment: 'together'
+        // },
         {
           to: 'window',
           attachment: 'together'
@@ -160,7 +127,63 @@ export default {
       ]
     }
   },
+  computed: {
+    selectedMap () {
+      return this.localSelected.reduce((result, current) => {
+        result[current] = true
+        return result
+      }, {})
+    }
+  },
+  watch: {
+    selected (val) {
+      // change is triggered by toggleNode after user interaction
+      // reset the flag and do nothing because UI is already updated
+      if (this.fromUI) {
+        this.fromUI = false
+        return
+      }
+      this.localSelected = val
+      this.init()
+    },
+    datasource () {
+      this.init()
+    }
+  },
+  created () {
+    this.init()
+  },
   methods: {
+    init () {
+      // { id, label, children, selected, indeterminate, parent }
+      let localDatasource = cloneDeep(this.datasource)
+      walk(localDatasource, {
+        enter: ({ node, parent }) => {
+          node.selected = false
+          node.solidCount = 0 // deteminately selected child count
+          node.softCount = 0 // indeterminately selected child count
+          node.indeterminate = false
+          node.parent = parent
+        },
+        exit: ({ node, parent }) => {
+          if (!node.id && !(node.children && node.children.length)) {
+            // invalid node
+            Vue.util.warn(`Invalid region tree node '${node.label}'. Provide \`id\`, \`children\` or both.`)
+            return
+          }
+
+          // get select state for self
+          if (node.id) {
+            // check select state from `selected`
+            node.selected = !!this.selectedMap[node.id]
+          }
+
+          // infer state from children
+          updateNode(node)
+        }
+      })
+      this.localDatasource = localDatasource
+    },
     toggleActive (node, show) {
       // `active` is not observed yet
       Vue.set(node, 'active', show)
@@ -171,7 +194,7 @@ export default {
 
       // select/unselect all descendents
       walk(node, {
-        exit ({ node }) {
+        exit: ({ node }) => {
           let hasChildren = node.children && node.children.length
           node.indeterminate = false
           node.selected = checked
@@ -194,7 +217,7 @@ export default {
       let output = []
       let includeIndeterminate = this.includeIndeterminate
       walk(this.localDatasource, {
-        enter ({ node }) {
+        enter: ({ node }) => {
           if (!node.id || !node.selected) {
             return
           }
@@ -204,6 +227,7 @@ export default {
           }
         }
       })
+      this.fromUI = true
       this.$emit('select', output)
     }
   }
