@@ -3,10 +3,10 @@ import Table from './Table'
 import Pager from './Pager'
 import Uploader from './Uploader'
 import Dialog from './Dialog'
-import Overlay from './Overlay'
+// import Overlay from './Overlay'
 import Breadcrumb from './Breadcrumb'
 import Input from './Input'
-import Form from './Form'
+// import Form from './Form'
 import Calendar from './Calendar'
 import DatePicker from './DatePicker'
 import Select from './Select'
@@ -17,13 +17,13 @@ import RadioGroup from './RadioGroup'
 import RadioButtonGroup from './RadioButtonGroup'
 import CheckboxGroup from './CheckboxGroup'
 import CheckButtonGroup from './CheckButtonGroup'
-import Tooltip from './Tooltip'
+// import Tooltip from './Tooltip'
 import Toast from './Toast'
-import Alert from './Alert'
+// import Alert from './Alert'
 import Tabs from './Tabs'
-import Switch from './Switch'
-import Searchbox from './Searchbox'
-import Steps from './Steps'
+// import Switch from './Switch'
+// import Searchbox from './Searchbox'
+// import Steps from './Steps'
 import RegionPicker from './RegionPicker'
 import ButtonGroup from './ButtonGroup'
 import Progress from './Progress'
@@ -54,11 +54,11 @@ export default [
     name: 'Dialog',
     component: Dialog
   },
-  {
-    path: '/overlay',
-    name: 'Overlay',
-    component: Overlay
-  },
+  // {
+  //   path: '/overlay',
+  //   name: 'Overlay',
+  //   component: Overlay
+  // },
   {
     path: '/breadcrumb',
     name: 'Breadcrumb',
@@ -69,11 +69,11 @@ export default [
     name: 'Input',
     component: Input
   },
-  {
-    path: '/form',
-    name: 'Form',
-    component: Form
-  },
+  // {
+  //   path: '/form',
+  //   name: 'Form',
+  //   component: Form
+  // },
   {
     path: '/calendar',
     name: 'Calendar',
@@ -124,21 +124,21 @@ export default [
     name: 'CheckButtonGroup',
     component: CheckButtonGroup
   },
-  {
-    path: '/tooltip',
-    name: 'Tooltip',
-    component: Tooltip
-  },
+  // {
+  //   path: '/tooltip',
+  //   name: 'Tooltip',
+  //   component: Tooltip
+  // },
   {
     path: '/toast',
     name: 'Toast',
     component: Toast
   },
-  {
-    path: '/alert',
-    name: 'Alert',
-    component: Alert
-  },
+  // {
+  //   path: '/alert',
+  //   name: 'Alert',
+  //   component: Alert
+  // },
   {
     path: '/tabs',
     name: 'Tabs',
@@ -154,26 +154,26 @@ export default [
         component: Input
       },
       {
-        path: 'switch',
-        component: Switch
+        path: 'progress',
+        component: Progress
       }
     ]
   },
-  {
-    path: '/switch',
-    name: 'Switch',
-    component: Switch
-  },
-  {
-    path: '/searchbox',
-    name: 'Searchbox',
-    component: Searchbox
-  },
-  {
-    path: '/steps',
-    name: 'Steps',
-    component: Steps
-  },
+  // {
+  //   path: '/switch',
+  //   name: 'Switch',
+  //   component: Switch
+  // },
+  // {
+  //   path: '/searchbox',
+  //   name: 'Searchbox',
+  //   component: Searchbox
+  // },
+  // {
+  //   path: '/steps',
+  //   name: 'Steps',
+  //   component: Steps
+  // },
   {
     path: '/region-picker',
     name: 'RegionPicker',
