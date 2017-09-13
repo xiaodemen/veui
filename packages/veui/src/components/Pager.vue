@@ -3,7 +3,7 @@
   <div class="veui-pager-info">
     <div class="veui-pager-total">共 {{ realTotal }} 条</div>
     <div class="veui-pager-size">
-      <span>每页显示</span>
+      <span>每页条数</span>
       <veui-select v-model="realPageSize"
         ui="link"
         :options="realPageSizes"
@@ -26,14 +26,14 @@
         :to="page === 1 ? '' : pageNavHref.previous.href"
         :native="native"
         @click="handleRedirect(pageNavHref.previous.page, $event)">
-        <icon name="angle-left"></icon>
+        <icon :name="icons.prev"></icon>
       </veui-link>
       <veui-link class="veui-pager-next"
         :class="{ 'veui-disabled': page === pageCount || pageCount === 0 }"
         :to="page === pageCount ? '' : pageNavHref.next.href"
         :native="native"
         @click="handleRedirect(pageNavHref.next.page, $event)">
-        <icon name="angle-right"></icon>
+        <icon :name="icons.next"></icon>
       </veui-link>
     </div>
   </div>
@@ -42,11 +42,11 @@
 
 <script>
 import Icon from './Icon'
-import '../icons'
 import Link from './Link'
 import Select from './Select'
 import Option from './Select/Option'
 import config from '../managers/config'
+import { icons } from '../mixins'
 
 config.defaults({
   'pager.pageSize': 30,
@@ -75,6 +75,7 @@ const moreIndicatorOffsetLength = 5
 
 export default {
   name: 'veui-pager',
+  mixins: [icons],
   components: {
     Icon,
     'veui-link': Link,
@@ -99,10 +100,6 @@ export default {
       }
     },
     total: {
-      type: Number
-    },
-    // @deprecated
-    pageTotal: {
       type: Number
     },
     to: {
@@ -130,12 +127,7 @@ export default {
       }
     },
     realTotal () {
-      // backward compatibility
-      return this.total != null
-        ? this.total
-        : this.pageTotal != null
-          ? this.pageTotal
-          : 0
+      return this.total || 0
     },
     pageNavHref () {
       return {

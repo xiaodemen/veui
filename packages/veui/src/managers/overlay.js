@@ -113,7 +113,7 @@ export class Tree {
       return result
     }
 
-    return curNode.iterateChildren(child => this.iterate({ curNode: child }))
+    return curNode.iterateChildren(child => this.iterate({ curNode: child, callback }))
   }
 
   insertNode (parentId, node, priority) {
@@ -161,10 +161,7 @@ export class Tree {
           })
 
           const children = targetGroup.children
-          const lastIndex = children.length - 1
-          children[targetIndex] = children[lastIndex]
-          children[lastIndex] = node
-
+          children.push(...children.splice(targetIndex, 1))
           this.generateTreeZIndex(node.id)
         }
       }

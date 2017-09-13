@@ -1,13 +1,13 @@
 <template>
-<veui-dialog overlay-class="veui-alert-box"
+<veui-dialog :overlay-class="realOverlayClass"
   :open.sync="localOpen"
   :ui="localUi"
   :closable="false"
   :priority="priority">
 
-  <veui-icon v-if="!!typeIconName"
+  <veui-icon v-if="icons[type]"
     class="veui-alert-box-icon"
-    :name="typeIconName">
+    :name="icons[type]">
   </veui-icon>
 
   <h3 class="veui-alert-box-title">
@@ -29,8 +29,9 @@ import { pick, find, includes } from 'lodash'
 import Dialog from './Dialog'
 import Button from './Button'
 import Icon from './Icon'
-import '../icons'
 import config from '../managers/config'
+import { icons } from '../mixins'
+import { normalizeCSSClass } from '../utils/helper'
 
 config.defaults({
   'alertbox.priority': 100
@@ -38,7 +39,8 @@ config.defaults({
 
 export default {
   name: 'veui-alert-box',
-  props: pick(Dialog.props, ['open', 'title', 'ui']),
+  mixins: [icons],
+  props: pick(Dialog.props, ['open', 'title', 'ui', 'overlayClass']),
   components: {
     'veui-dialog': Dialog,
     'veui-button': Button,
@@ -60,12 +62,11 @@ export default {
     type () {
       return find(this.uis, ui => includes(['success', 'error', 'info'], ui))
     },
-    typeIconName () {
+    realOverlayClass () {
       return {
-        success: 'check-circle',
-        info: 'info-circle',
-        error: 'cross-circle'
-      }[this.type]
+        ...normalizeCSSClass(this.overlayClass),
+        'veui-alert-box': true
+      }
     }
   },
   watch: {
