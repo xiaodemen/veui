@@ -17,13 +17,13 @@ import RadioGroup from './RadioGroup'
 import RadioButtonGroup from './RadioButtonGroup'
 import CheckboxGroup from './CheckboxGroup'
 import CheckButtonGroup from './CheckButtonGroup'
-// import Tooltip from './Tooltip'
+import Tooltip from './Tooltip'
 import Toast from './Toast'
-// import Alert from './Alert'
+import Alert from './Alert'
 import Tabs from './Tabs'
 // import Switch from './Switch'
-// import Searchbox from './Searchbox'
-// import Steps from './Steps'
+import Searchbox from './Searchbox'
+import Steps from './Steps'
 import RegionPicker from './RegionPicker'
 import ButtonGroup from './ButtonGroup'
 import Progress from './Progress'
@@ -124,21 +124,21 @@ export default [
     name: 'CheckButtonGroup',
     component: CheckButtonGroup
   },
-  // {
-  //   path: '/tooltip',
-  //   name: 'Tooltip',
-  //   component: Tooltip
-  // },
+  {
+    path: '/tooltip',
+    name: 'Tooltip',
+    component: Tooltip
+  },
   {
     path: '/toast',
     name: 'Toast',
     component: Toast
   },
-  // {
-  //   path: '/alert',
-  //   name: 'Alert',
-  //   component: Alert
-  // },
+  {
+    path: '/alert',
+    name: 'Alert',
+    component: Alert
+  },
   {
     path: '/tabs',
     name: 'Tabs',
@@ -164,16 +164,16 @@ export default [
   //   name: 'Switch',
   //   component: Switch
   // },
-  // {
-  //   path: '/searchbox',
-  //   name: 'Searchbox',
-  //   component: Searchbox
-  // },
-  // {
-  //   path: '/steps',
-  //   name: 'Steps',
-  //   component: Steps
-  // },
+  {
+    path: '/searchbox',
+    name: 'Searchbox',
+    component: Searchbox
+  },
+  {
+    path: '/steps',
+    name: 'Steps',
+    component: Steps
+  },
   {
     path: '/region-picker',
     name: 'RegionPicker',
