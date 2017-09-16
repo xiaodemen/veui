@@ -1,10 +1,10 @@
-import '../icons/minus-thick'
-import '../icons/check-thick'
+import '../icons/minus-small'
+import '../icons/check-small'
 import config from 'veui/managers/config'
 
 config.defaults({
   'checkbox.icons': {
-    indeterminate: 'minus-thick',
-    checked: 'check-thick'
+    indeterminate: 'minus-small',
+    checked: 'check-small'
   }
 })

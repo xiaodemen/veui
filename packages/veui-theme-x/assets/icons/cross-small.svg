@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="96px" height="96px" viewBox="0 0 96 96" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 41.1 (35376) - http://www.bohemiancoding.com/sketch -->
-    <title>del_s</title>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.1 (44463) - http://www.bohemiancoding.com/sketch -->
+    <title>关闭12</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Desktop-HD" transform="translate(-1248.000000, -1248.000000)" fill="#000000">
-            <g id="del_s" transform="translate(1248.000000, 1248.000000)">
-                <path d="M55.445642,46.9824107 L68.1930906,34.2349622 C70.4829846,31.9450683 70.51671,28.1123531 68.1735642,25.7692073 C65.8140822,23.4097256 62.040171,23.4173193 59.7078091,25.7496809 L46.9603606,38.4971294 L34.2129121,25.7496809 C31.8805505,23.4173193 28.1066389,23.4097256 25.7471572,25.7692073 C23.4040114,28.1123531 23.4377368,31.9450683 25.7276307,34.2349622 L38.4750793,46.9824107 L25.7276307,59.7298593 C23.4377368,62.019753 23.4040114,65.8524684 25.7471572,68.1956142 C28.1066389,70.5550962 31.8805505,70.547502 34.2129121,68.2151406 L46.9603606,55.4676922 L59.7078091,68.2151406 C62.040171,70.547502 65.8140822,70.5550962 68.1735642,68.1956142 C70.51671,65.8524684 70.4829846,62.019753 68.1930906,59.7298593 L55.445642,46.9824107 Z" id="Combined-Shape"></path>
+    <g id="【未公示】" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="【供序章用规范】组件-图标-魏博嘉" transform="translate(-160.000000, -392.000000)" fill="#333333">
+            <g id="关闭12" transform="translate(160.000000, 392.000000)">
+                <path d="M6.83333333,6 L10,2.83333333 L9.16666667,2 L6,5.16666667 L2.83333333,2 L2,2.83333333 L5.16666667,6 L2,9.16666667 L2.83333333,10 L6,6.83333333 L9.16666667,10 L10,9.16666667 L6.83333333,6 Z"></path>
             </g>
         </g>
     </g>

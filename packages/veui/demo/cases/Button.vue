@@ -38,6 +38,15 @@
       <veui-button ui="alt" loading>取消</veui-button>
     </p>
     <p>
+      <veui-button ui="link primary micro">创建</veui-button>
+      <veui-button ui="link primary tiny">创建</veui-button>
+      <veui-button ui="link primary small">创建</veui-button>
+      <veui-button ui="link primary">创建</veui-button>
+      <veui-button ui="link primary large">创建</veui-button>
+      <veui-button ui="link primary" disabled>创建</veui-button>
+      <veui-button ui="link primary" loading>创建</veui-button>
+    </p>
+    <p>
       <veui-button ui="link micro">编辑</veui-button>
       <veui-button ui="link tiny">编辑</veui-button>
       <veui-button ui="link small">编辑</veui-button>
@@ -56,13 +65,13 @@
       <veui-button ui="round primary" loading><icon name="check"></icon></veui-button>
     </p>
     <p>
-      <veui-button ui="round micro"><icon name="pen"></icon></veui-button>
-      <veui-button ui="round tiny"><icon name="pen"></icon></veui-button>
-      <veui-button ui="round small"><icon name="pen"></icon></veui-button>
-      <veui-button ui="round"><icon name="pen"></icon></veui-button>
-      <veui-button ui="round large"><icon name="pen"></icon></veui-button>
-      <veui-button ui="round" disabled><icon name="pen"></icon></veui-button>
-      <veui-button ui="round" loading><icon name="pen"></icon></veui-button>
+      <veui-button ui="round micro"><icon name="edit"></icon></veui-button>
+      <veui-button ui="round tiny"><icon name="edit"></icon></veui-button>
+      <veui-button ui="round small"><icon name="edit"></icon></veui-button>
+      <veui-button ui="round"><icon name="edit"></icon></veui-button>
+      <veui-button ui="round large"><icon name="edit"></icon></veui-button>
+      <veui-button ui="round" disabled><icon name="edit"></icon></veui-button>
+      <veui-button ui="round" loading><icon name="edit"></icon></veui-button>
     </p>
     <p>
       <veui-button ui="square micro"><icon name="search"></icon></veui-button>
@@ -74,13 +83,13 @@
       <veui-button ui="square" loading><icon name="search"></icon></veui-button>
     </p>
     <p>
-      <veui-button ui="alt square micro"><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square tiny"><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square small"><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square"><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square large"><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square" disabled><icon name="plus"></icon></veui-button>
-      <veui-button ui="alt square" loading><icon name="plus"></icon></veui-button>
+      <veui-button ui="alt square micro"><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square tiny"><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square small"><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square"><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square large"><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square" disabled><icon name="cross"></icon></veui-button>
+      <veui-button ui="alt square" loading><icon name="cross"></icon></veui-button>
     </p>
   </article>
 </template>
@@ -90,9 +99,9 @@ import bus from '../bus'
 import { Button, Icon } from 'veui'
 import 'veui-theme-x/icons/cross-small'
 import 'veui-theme-x/icons/check'
-import 'veui-theme-x/icons/pen'
+import 'veui-theme-x/icons/edit'
 import 'veui-theme-x/icons/search'
-import 'veui-theme-x/icons/plus'
+import 'veui-theme-x/icons/cross'
 
 export default {
   name: 'button-demo',

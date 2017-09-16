@@ -149,7 +149,9 @@
 
       a,
       span {
-        display: block;
+        display: inline-block;
+        min-width: @button-width;
+        .padding(_, 6px);
         cursor: pointer;
 
         &:hover {
@@ -234,6 +236,10 @@
       width: @button-height * @scale-ratio;
       height: @button-height * @scale-ratio;
       line-height: 1.5;
+    }
+
+    .veui-icon {
+      height: @digit-height * @scale-ratio / 2;
     }
 
     .generate-responsive-page-digit-width(4, .8);
