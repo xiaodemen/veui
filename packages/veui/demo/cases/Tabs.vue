@@ -34,7 +34,7 @@
       <veui-tabs :active.sync="$route.fullPath">
         <veui-tab label="Button" to="/tabs/button"><router-view></router-view></veui-tab>
         <veui-tab label="Input" to="/tabs/input"><router-view></router-view></veui-tab>
-        <veui-tab label="Switch" to="/tabs/progress"><router-view></router-view></veui-tab>
+        <veui-tab label="Progress" to="/tabs/progress"><router-view></router-view></veui-tab>
       </veui-tabs>
     </section>
     <section>
