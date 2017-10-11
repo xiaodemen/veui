@@ -21,7 +21,7 @@ import Tooltip from './Tooltip'
 import Toast from './Toast'
 import Alert from './Alert'
 import Tabs from './Tabs'
-// import Switch from './Switch'
+import Switch from './Switch'
 import Searchbox from './Searchbox'
 import Steps from './Steps'
 import RegionPicker from './RegionPicker'
@@ -144,11 +144,11 @@ export default [
     name: 'Steps',
     component: Steps
   },
-  // {
-  //   path: '/switch',
-  //   name: 'Switch',
-  //   component: Switch
-  // },
+  {
+    path: '/switch',
+    name: 'Switch',
+    component: Switch
+  },
   {
     path: '/table',
     name: 'Table',
