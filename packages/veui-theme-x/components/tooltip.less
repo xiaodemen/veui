@@ -17,6 +17,10 @@
   border-radius: 1px;
   .veui-overlay-shadow();
 
+  &-box-transparent {
+    pointer-events: none;
+  }
+
   &::before,
   &::after {
     content: "";
@@ -153,5 +157,13 @@
     &::after {
       color: #fff;
     }
+  }
+
+  &[ui~="small"] {
+    font-size: @veui-font-size-small;
+  }
+
+  &[ui~="large"] {
+    font-size: @veui-font-size-large;
   }
 }

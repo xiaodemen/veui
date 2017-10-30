@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <veui-tooltip :position="position" :ui="ui" :target="target" trigger="hover" :open.sync="open">当前是hover事件</veui-tooltip>
+      <veui-tooltip :position="position" :ui="ui" :target="target" trigger="hover">当前是hover事件</veui-tooltip>
     </p>
     <p>
       <div class="demo-wrap">
@@ -106,12 +106,18 @@
           </div>
         </div>
       </div>
-      <veui-tooltip :position="clickPosition" :ui="ui" :target="clickTarget" trigger="click" :open.sync="clickOpen">当前是click事件</veui-tooltip>
+      <veui-tooltip :position="clickPosition" :ui="ui" :target="clickTarget" trigger="click">当前是click事件</veui-tooltip>
     </p>
     <p>
       <div style="margin-bottom:10px;">自定义事件</div>
       <veui-input ui="big" v-model="number" composition @change="log('change')" ref="number" @focus.native="numberOpen = true" @blur.native="numberOpen = false"></veui-input>
       <veui-tooltip position="top" :ui="ui" target="number" :custom="true" :open.sync="numberOpen">你focus到了</veui-tooltip>
+    </p>
+
+    <p>
+      <div style="margin-bottom:10px;">排除自己</div>
+      <veui-button ref="exclude">target</veui-button>
+      <veui-tooltip position="top" target="exclude" trigger="hover" :interactive="false" :hide-delay="0">你focus到了</veui-tooltip>
     </p>
   </article>
 </template>
@@ -151,12 +157,10 @@ export default {
     show (obj) {
       this.position = obj.position
       this.target = obj.target
-      this.open = true
     },
     clickShow (obj) {
       this.clickPosition = obj.clickPosition
       this.clickTarget = obj.clickTarget
-      this.clickOpen = true
     }
   }
 }

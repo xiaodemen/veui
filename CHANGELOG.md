@@ -1,3 +1,14 @@
+### 0.3.4
+
+* [+] 新增 `Tree` 组件。
+* [+] 新增 `FilterPanel` 组件。
+* [+] 新增 `Transfer` 组件。
+* [+] 新增 `Schedule` 组件。
+* [+] `outside` 指令新增 `excludeSelf` 参数，使判断仅对 `refs` 生效。
+* [+] `outside` 指令新增 `mousedown`、`mouseup` 的支持。
+* [+] `Tooltip` 组件新增 `interactive` prop，控制浮层是否可交互。
+* [^] `Checkbox` 和 `Radio` 组件现在可以在未绑定数据时进行交互。
+
 ### 0.3.3
 
 * [^] 修复 `config` 模块参数重载错误的问题。
@@ -6,6 +17,7 @@
 * [^] `Uploader` 本地校验失败的 slot 名修改为 `type-invalid` 及 `size-invalid`。**[Breaking change]**
 * [+] 为调用了 `Overlay` 组件的元素增加了指定 `overlay-options` 的功能。
 * [^] 修复了 `RegionPicker` 浮层有时会闪动的问题。
+* [+] 新增了 `Carousel` 组件。
 
 ### 0.3.2
 

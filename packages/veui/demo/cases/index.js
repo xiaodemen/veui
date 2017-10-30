@@ -27,6 +27,9 @@ import Steps from './Steps'
 import RegionPicker from './RegionPicker'
 import ButtonGroup from './ButtonGroup'
 import Progress from './Progress'
+import Carousel from './Carousel'
+import Transfer from './Transfer'
+import Schedule from './Schedule'
 
 export default [
   {
@@ -49,15 +52,15 @@ export default [
     name: 'ButtonGroup',
     component: ButtonGroup
   },
-  // {
-  //   path: '/overlay',
-  //   name: 'Overlay',
-  //   component: Overlay
-  // },
   {
     path: '/calendar',
     name: 'Calendar',
     component: Calendar
+  },
+  {
+    path: '/carousel',
+    name: 'Carousel',
+    component: Carousel
   },
   {
     path: '/checkbox',
@@ -99,6 +102,11 @@ export default [
     name: 'Input',
     component: Input
   },
+  // {
+  //   path: '/overlay',
+  //   name: 'Overlay',
+  //   component: Overlay
+  // },
   {
     path: '/pager/:page?',
     name: 'Pager',
@@ -128,6 +136,11 @@ export default [
     path: '/region-picker',
     name: 'RegionPicker',
     component: RegionPicker
+  },
+  {
+    path: '/schedule',
+    name: 'Schedule',
+    component: Schedule
   },
   {
     path: '/searchbox',
@@ -183,6 +196,11 @@ export default [
     path: '/tooltip',
     name: 'Tooltip',
     component: Tooltip
+  },
+  {
+    path: '/transfer',
+    name: 'Transfer',
+    component: Transfer
   },
   {
     path: '/uploader',

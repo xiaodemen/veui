@@ -28,6 +28,10 @@
     "path": "Calendar.vue"
   },
   {
+    "name": "Carousel",
+    "path": "Carousel.vue"
+  },
+  {
     "name": "CheckButtonGroup",
     "path": "CheckButtonGroup.vue"
   },
@@ -66,6 +70,10 @@
   {
     "name": "Fieldset",
     "path": "Fieldset.js"
+  },
+  {
+    "name": "FilterPanel",
+    "path": "FilterPanel.vue"
   },
   {
     "name": "Field",
@@ -138,6 +146,10 @@
   {
     "name": "RegionPicker",
     "path": "RegionPicker.vue"
+  },
+  {
+    "name": "Schedule",
+    "path": "Schedule.vue"
   },
   {
     "name": "Searchbox",
@@ -222,6 +234,30 @@
   {
     "name": "Tooltip",
     "path": "Tooltip.vue"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer/Transfer.vue"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer"
+  },
+  {
+    "name": "Transfer",
+    "path": "Transfer/index.js"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree/Tree.vue"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree"
+  },
+  {
+    "name": "Tree",
+    "path": "Tree/index.js"
   },
   {
     "name": "Uploader",
