@@ -42,7 +42,7 @@
         </veui-field>
 
         <div class="operation">
-          <veui-button @click="() => this.$refs.form1.reset()">重置</veui-button>
+          <veui-button type="reset">重置</veui-button>
         </div>
       </veui-form>
     </section>
@@ -2687,7 +2687,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~veui-theme-x/lib.less";
+@import "~veui-theme-one/lib.less";
 
 .veui-form-demo {
   h2 {
