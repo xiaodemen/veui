@@ -1,10 +1,81 @@
-### 1.0.0-alpha.1
+## 1.0.0-alpha.5
 
-#### ⚠️ 非兼容性变更
+### ⚠️ 非兼容性变更
+
+* [^] 为 `Select` 用名为 `option-label` 的 scoped slot 替代了原来的 `option`。原来的 `option` 现在为整个选项的内容，包括文本和图标等。
+
+### 💡 主要变更
+
+* [+] 新增 `resize` 指令。
+* [^] `Tabs` 组件中的 `Tab` 元素不再需要强制配置 `name` 属性。
+* [+] `Alert` 组件显示多条消息时，增加当前消息索引/总消息数的展示。
+* [^] 调整 `Alert` 组件默认 slot 范围，同时新增默认 scoped slot。
+
+### 🐞 问题修复
+
+* [^] 修复 `Tabs` 组件中 `Tab` 元素的渲染顺序和属性同步问题。
+* [^] 修复 `Searchbox` 组件在按 <kbd>enter</kbd> 后自动触发表单提交的问题。
+* [^] 修复 `Overlay` 组件中判断组件类型错误的问题。
+* [^] `Calendar` 组件在时间段选择过程中，如果 `selected` 发生变更，现在会自动清除半选状态。
+
+## 1.0.0-alpha.4
+
+### ⚠️ 非兼容性变更
+
+* [^] 重构了 `babel-plugin-veui` 及 `veui-loader` 的逻辑，以支持服务端渲染时首屏样式的抽取。
+
+  > #### 迁移指南
+  >
+  > * 删除 `build/vue-loader.conf.js` 中 `preLoaders` 中的 `veui-loader` 配置；
+  >
+  > * 将 `.babelrc` 中的 `veui` 插件配置删除，整个只保留字符串 `'veui'`；
+  > * 在 `build/webpack.base.conf.js` 中，重新配置 `veui-loader`：
+  >
+  > ```js
+  > {
+  >   test: /\.vue$/,
+  >   loader: 'veui-loader',
+  >   enforce: 'pre',
+  >   options: {
+  >     modules: [
+  >       {
+  >         package: 'veui-theme-one',
+  >         fileName: '${module}.less'
+  >       },
+  >       {
+  >         package: 'veui-theme-one',
+  >         fileName: '${module}.js',
+  >         transform: false
+  >       }
+  >     ]
+  >   },
+  >   include: [resolve('veui'), resolve('vue-awesome')]
+  > }
+  > ```
+
+### 🐞 问题修复
+
+* [^] 修正了 `Carousel` 组件 slot 的位置。
+
+## 1.0.0-alpha.3
+
+### 🐞 问题修复
+
+* [^] 统一所有内部依赖版本。
+
+## 1.0.0-alpha.2
+
+### 🐞 问题修复
+
+* [^] 修复主题包 `peerDependencies` 中的 `veui` 版本号。
+
+## 1.0.0-alpha.1
+
+### ⚠️ 非兼容性变更
 
 * [^] 主题包 `veui-theme-x` 重命名为正式名称 `veui-theme-one`。
 
-#### 💡 主要变更
+### 💡 主要变更
 
 * [+] 新增 `Tree` 组件。
 * [+] 新增 `FilterPanel` 组件。
@@ -17,13 +88,13 @@
 * [+] `Tooltip` 组件新增 `interactive` prop，控制浮层是否可交互。
 * [+] `Calendar` 组件新增 scoped slot `date`。
 
-#### 🐞 问题修复
+### 🐞 问题修复
 
 * [^] 修复 `Calendar` 组件在选择范围时错误切换视图的问题。
 * [^] `Checkbox` 和 `Radio` 组件现在可以在未绑定数据时进行交互。
 * [^] 修复 Chrome 62 起给按钮默认添加圆角的问题。
 
-### 0.3.3
+## 0.3.3
 
 * [^] 修复 `config` 模块参数重载错误的问题。
 * [+] `config` 模块支持对对象配置的 `merge`、`mergeDefaults` 操作。
@@ -33,17 +104,17 @@
 * [^] 修复了 `RegionPicker` 浮层有时会闪动的问题。
 * [+] 新增了 `Carousel` 组件。
 
-### 0.3.2
+## 0.3.2
 
 * [^] 修正 `Calendar` 单元格的文字颜色、背景色相关样式。
 * [^] 修复上个版本完善 `outside` 指令时引入的问题。
 
-### 0.3.1
+## 0.3.1
 
 * [+] `Tooltip` 增加延时隐藏的 prop `hideDelay`。
 * [^] 修复不引入 `ButtonGroup` 时，`CheckButtonGroup` 和 `RadioButtonGroup` 部分样式丢失的问题。
 
-### 0.3.0
+## 0.3.0
 
 *此版本包含多个 breaking change，升级前请仔细阅读下列说明。*
 
@@ -70,7 +141,7 @@
 * [+] 增加 `Progress` 组件（限 `theme-x`）。
 * [+] 所有有单一浮层逻辑的组件，新增 prop `overlay-class`，最终渲染到 `Overlay` 实例的 DOM `class` 上，方便外部区分浮层归属。
 
-### 0.2.4
+## 0.2.4
 
 * [+] 增加 `veui-loader`，确保只在 Webpack 能够 resolve 样式文件时 `babel-plugin-veui` 才注入样式 `import` 语句。
 * [^] 改善 `Button`、`Table` 组件的样式。
@@ -84,11 +155,11 @@
 * [^] `Table` 组件的 `select` 事件将在 `selected` prop 更新后触发，`select` 事件在全选时增加 `null` 值作为当前选择项的数据，参数列表修改为和单选时一致。**[Breaking change]**
 * [^] 修正 `RegionPicker` 无法响应外部 `selected` 变化的问题。
 
-### 0.2.3
+## 0.2.3
 
 * [^] 修复 `0.2.2` 版本 npm 包的问题。
 
-### 0.2.2
+## 0.2.2
 
 * [+] 增加 `$alert`、`$confirm`、`$prompt` 插件。
 * [+] 增加 `RegionPicker` 组件。
@@ -99,7 +170,7 @@
 * [^] 修复 `outside` 指令重复添加事件绑定的问题。
 * [^] 修复 `Calendar` 组件年份选择视图前后选择不正确的问题。
 
-### 0.2.1
+## 0.2.1
 
 * [+] 增加了 `SearchBox` 组件。
 * [+] 为 `Select` 组件增加了 `clearable` 属性，可以根据 `placeholder` 生成首选项以清除之前的选择。
@@ -112,7 +183,7 @@
 * [+] 修复了 `Pager` 在没有数据时下一页按钮没有禁用的问题。
 * [^] 重命名 `Pager` 的 `pageTotal` 属性为 `total`，旧名称仍然兼容，未来版本可能删除。
 
-### 0.2.0
+## 0.2.0
 
 * [^] 项目转为 mono-repo 的组织方式，使用 `lerna` 进行管理。
 * [+] 将样式代码独立为单独的包 `veui-theme-dux`。
@@ -125,7 +196,7 @@
 * [+] 增加指令式调用 `alert`/`confirm`/`prompt` 的功能。
 * [^] `Pager` 组件新增 `pageSizes` 属性，用来指定可选的页数。
 
-### 0.1.3
+## 0.1.3
 
 * [^] 将 `BreadCrumb` 组件的 `routers` 属性重命名为 `routes`，后续版本会将 `routers` 移除。
 * [^] 修复 `Icon` 组件嵌套失效的问题。

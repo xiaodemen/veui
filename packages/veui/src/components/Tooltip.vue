@@ -2,8 +2,7 @@
 import Overlay from './Overlay'
 import { outside } from '../directives'
 import { overlay } from '../mixins'
-import { getNodes } from '../utils/context'
-import { resolveOverlayPosition } from '../utils/helper'
+import { getNodes, isValidNodesResolver } from '../utils/context'
 import { isString } from 'lodash'
 import config from '../managers/config'
 
@@ -28,7 +27,11 @@ export default {
       type: String,
       default: 'top'
     },
-    target: String,
+    target: {
+      validate (v) {
+        return isValidNodesResolver(v)
+      }
+    },
     trigger: {
       type: String,
       default: 'hover'
@@ -52,7 +55,16 @@ export default {
   },
   data () {
     return {
-      localOpen: this.open
+      localOpen: this.open,
+      localOverlayOptions: {
+        position: this.position,
+        constraints: [
+          {
+            to: 'window',
+            attachment: 'together'
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -69,17 +81,6 @@ export default {
     },
     targetNode () {
       return getNodes(this.target, this.$vnode.context)[0]
-    },
-    overlay () {
-      return {
-        ...resolveOverlayPosition(this.position),
-        constraints: [
-          {
-            to: 'window',
-            attachment: 'together'
-          }
-        ]
-      }
     },
     outsideOptions () {
       return {
@@ -107,6 +108,9 @@ export default {
     },
     target () {
       this.localOpen = true
+    },
+    position (val) {
+      this.localOverlayOptions.position = val
     }
   },
   methods: {
@@ -140,7 +144,7 @@ export default {
       <veui-overlay
         target={this.targetNode}
         open={this.realOpen}
-        options={this.overlay}
+        options={this.realOverlayOptions}
         overlayClass={this.mergeOverlayClass({
           'veui-tooltip-box': true,
           'veui-tooltip-box-transparent': !this.interactive
