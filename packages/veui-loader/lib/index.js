@@ -109,19 +109,20 @@ function getExtname(file) {
 var RE_SCRIPT = /<script(?:\s+[^>]*)?>/i;
 
 function patchType(content, type, peerPath) {
+  var normalizedPath = (0, _utils.normalize)(peerPath).replace(/\\/g, '\\\\');
   switch (type) {
     case 'script':
       content = content.replace(RE_SCRIPT, function (match) {
-        return match + '\nimport \'' + peerPath + '\'\n';
+        return match + '\nimport \'' + normalizedPath + '\'\n';
       });
       break;
     case 'style':
       var langStr = '';
-      var ext = getExtname(peerPath);
+      var ext = getExtname(normalizedPath);
       if (ext !== 'css') {
         langStr = 'lang="' + ext + '" ';
       }
-      content += '\n<style ' + langStr + 'src="' + peerPath + '"></style>\n';
+      content += '\n<style ' + langStr + 'src="' + normalizedPath + '"></style>\n';
       break;
     default:
       break;

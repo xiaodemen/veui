@@ -28,7 +28,7 @@ export default {
       default: 'top'
     },
     target: {
-      validate (v) {
+      validator (v) {
         return isValidNodesResolver(v)
       }
     },
@@ -107,7 +107,7 @@ export default {
       }
     },
     target () {
-      this.localOpen = true
+      this.localOpen = this.open
     },
     position (val) {
       this.localOverlayOptions.position = val

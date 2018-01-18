@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import pkgDir from 'pkg-dir'
 import loaderUtils from 'loader-utils'
-import { kebabCase, camelCase, pascalCase, getJSON } from './utils'
+import { kebabCase, camelCase, pascalCase, getJSON, normalize } from './utils'
 import resolve from 'enhanced-resolve/lib/node'
 
 const COMPONENTS = getJSON(path.resolve(__dirname, '../components.json'))
@@ -55,25 +55,31 @@ function patchComponent (content, component, options, resolve) {
     return content
   }
 
-  let parts = modules.reduce((acc, {
-    package: pack,
-    path: packPath = COMPONENTS_DIRNAME,
-    transform,
-    fileName
-  }) => {
-    let peerComponent = getPeerFilename(component, {
-      transform,
-      template: fileName
-    })
-    let peerPath = path.join(pack, packPath, peerComponent)
-    if (assurePath(peerPath, resolve)) {
-      pushPart(acc, peerPath)
+  let parts = modules.reduce(
+    (
+      acc,
+      {
+        package: pack,
+        path: packPath = COMPONENTS_DIRNAME,
+        transform,
+        fileName
+      }
+    ) => {
+      let peerComponent = getPeerFilename(component, {
+        transform,
+        template: fileName
+      })
+      let peerPath = path.join(pack, packPath, peerComponent)
+      if (assurePath(peerPath, resolve)) {
+        pushPart(acc, peerPath)
+      }
+      return acc
+    },
+    {
+      script: [],
+      style: []
     }
-    return acc
-  }, {
-    script: [],
-    style: []
-  })
+  )
 
   return Object.keys(parts).reduce((content, type) => {
     return parts[type].reduce((content, peerPath) => {
@@ -101,7 +107,10 @@ function pushPart (parts, file) {
  * @returns {string} File extension
  */
 function getExtname (file) {
-  return path.extname(file).replace(/\./g, '').toLowerCase()
+  return path
+    .extname(file)
+    .replace(/\./g, '')
+    .toLowerCase()
 }
 
 const RE_SCRIPT = /<script(?:\s+[^>]*)?>/i
@@ -114,19 +123,20 @@ const RE_SCRIPT = /<script(?:\s+[^>]*)?>/i
  * @returns {string} The patched content
  */
 function patchType (content, type, peerPath) {
+  let normalizedPath = normalize(peerPath).replace(/\\/g, '\\\\')
   switch (type) {
     case 'script':
       content = content.replace(RE_SCRIPT, match => {
-        return `${match}\nimport '${peerPath}'\n`
+        return `${match}\nimport '${normalizedPath}'\n`
       })
       break
     case 'style':
       let langStr = ''
-      let ext = getExtname(peerPath)
+      let ext = getExtname(normalizedPath)
       if (ext !== 'css') {
         langStr = `lang="${ext}" `
       }
-      content += `\n<style ${langStr}src="${peerPath}"></style>\n`
+      content += `\n<style ${langStr}src="${normalizedPath}"></style>\n`
       break
     default:
       break
@@ -176,10 +186,10 @@ function assurePath (modulePath, resolve) {
  * @param {string} options.template File name template
  * @returns {string} Peer module file name
  */
-function getPeerFilename (name, {
-  transform = 'kebab-case',
-  template = '${module}.css'
-}) {
+function getPeerFilename (
+  name,
+  { transform = 'kebab-case', template = '${module}.css' }
+) {
   if (!name) {
     return null
   }

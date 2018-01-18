@@ -166,6 +166,11 @@ export default {
       current: null
     }
   },
+  watch: {
+    selected (val) {
+      this.localSelected = cloneDeep(val)
+    }
+  },
   computed: {
     dayNames () {
       return [...dayNames]
@@ -332,6 +337,7 @@ export default {
     },
     selectShortcut (i) {
       this.localSelected = this.realShortcuts[i].selected
+      this.$emit('select', this.localSelected)
     },
     toggleDay (day, checked) {
       if (checked) {

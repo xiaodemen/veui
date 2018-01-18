@@ -4,26 +4,20 @@
     <div class="veui-tabs-list" :class="{'veui-tabs-list-empty': items.length === 0}" ref="resizeContainer" v-resize="(e) => resizeHandler(e)">
       <div class="veui-tabs-list-resizer">
         <template v-for="(tab, index) in items">
-          <div :key="tab.name" v-if="tab.to" class="veui-tabs-item" :ref="`tab-${tab.name}`" :class="{
+          <div :key="tab.name" class="veui-tabs-item" :ref="`tab-${tab.name}`" :class="{
             'veui-tabs-item-disabled': tab.disabled,
             'veui-tabs-item-active': index === localIndex
           }">
-            <slot name="tab-item" v-bind="tab">
-              <veui-link :to="tab.to" :native="tab.native">{{ tab.label }}</veui-link>
-              <icon :name="`cross-${(ui || '').split(' ').indexOf('large') ? 'large' : 'small'}`" v-if="tab.removable" @click.native="$emit('remove', tab)"></icon>
-            </slot>
-          </div>
-          <div :key="tab.name" v-else class="veui-tabs-item" :ref="`tab-${tab.name}`" :class="{
-            'veui-tabs-item-disabled': tab.disabled,
-            'veui-tabs-item-active': index === localIndex
-          }">
-            <slot name="tab-item" v-bind="tab">
-              <span @click="!tab.disabled && setActive({index})">{{ tab.label }}</span>
-              <slot name="tab-item-extra" v-bind="tab">
-                <icon :name="`cross-${(ui || '').split(' ').indexOf('large') !== -1 ? 'large' : 'small'}`"
-                  v-if="tab.removable"
-                  @click.native="$emit('remove', tab)"></icon>
-              </slot>
+            <slot name="tab-item" v-bind="tab" :index="index">
+              <veui-link v-if="tab.to" class="veui-tabs-item-label" :to="tab.to" :native="tab.native">{{ tab.label }}</veui-link>
+              <button v-else class="veui-tabs-item-label" type="button" @click="!tab.disabled && setActive({index})">{{ tab.label }}</button>
+              <button type="button" class="veui-tabs-item-remove"
+                @click="$emit('remove', tab)">
+                <slot name="tab-item-extra" v-bind="tab">
+                  <icon :name="icons.remove"
+                  v-if="tab.removable"></icon>
+                </slot>
+              </button>
             </slot>
           </div>
         </template>
@@ -33,14 +27,14 @@
       <div v-if="!$slots.tabsExtra"
         class="veui-tabs-extra" ref="extra"
         :class="{'veui-tabs-extra-overflow': menuOverflow}">
-        <div v-if="addable"
+        <button type="button" v-if="addable"
           class="veui-tabs-operator"
           @click="$emit('add')">
-          <icon name="plus-circle-o"></icon><slot name="tabs-extra-text"><span>添加TAB</span></slot>
-        </div>
-        <div class="veui-tabs-scroller" v-if="menuOverflow">
-          <span class="veui-tabs-scroller-left" @click="scroll('left')"><icon :name="`angle-left${(ui || '').split(' ').indexOf('large') !== -1 ? '' : '-small'}`"></icon></span>
-          <span class="veui-tabs-scroller-right" @click="scroll('right')"><icon :name="`angle-right${(ui || '').split(' ').indexOf('large') !== -1 ? '' : '-small'}`"></icon></span>
+          <icon :name="icons.add"></icon><slot name="tabs-extra-text"><span>添加TAB</span></slot>
+        </button>
+        <div class="veui-tabs-scroller" v-if="menuOverflow" ref="scroller">
+          <button type="button" class="veui-tabs-scroller-left" @click="scroll('left')"><icon :name="icons.prev"></icon></button>
+          <button type="button" class="veui-tabs-scroller-right" @click="scroll('right')"><icon :name="icons.next"></icon></button>
         </div>
       </div>
     </slot>
@@ -54,17 +48,12 @@ import warn from '../../utils/warn'
 import Link from '../Link'
 import Icon from '../Icon'
 import { resize } from '../../directives'
-import 'veui-theme-one/icons/cross-small'
-import 'veui-theme-one/icons/cross-large'
-import 'veui-theme-one/icons/plus-circle-o'
-import 'veui-theme-one/icons/angle-left-small'
-import 'veui-theme-one/icons/angle-left-large'
-import 'veui-theme-one/icons/angle-right-small'
-import 'veui-theme-one/icons/angle-right-large'
+import { icons } from '../../mixins'
 
 export default {
   name: 'veui-tabs',
   uiTypes: ['tabs'],
+  mixins: [icons],
   components: {
     'veui-link': Link,
     Icon
@@ -93,8 +82,8 @@ export default {
     return {
       items: [],
       localIndex: null,
-      localActive: '',
-      activeId: '',
+      localActive: null,
+      activeId: null,
       menuOverflow: false
     }
   },
@@ -115,11 +104,12 @@ export default {
         warn('Duplicate tab name.')
       }
 
-      // 如果还没有找到选中的 tab，优先查看配置的 name，因为 index 有默认值
+      // 如果还没有找到选中的 tab，优先查看配置的 name
+      // 因为 index 有默认值，而 tab.name 会 fallback 到 id 上边，所以 active 不指定不会误判断
       if (
         !this.activeId &&
-        (tab.name === this.active || (this.localIndex == null && !this.active)) ||
-        (tabIndex === this.index || (this.localIndex == null && !this.active))
+        tab.name === this.active ||
+        (tabIndex === this.index && !this.active)
       ) {
         this.localIndex = tabIndex
         this.localActive = tab.name
@@ -152,8 +142,8 @@ export default {
         this.activeId = this.items[this.localIndex].id
       } else {
         this.localIndex = null
-        this.localActive = ''
-        this.activeId = ''
+        this.localActive = null
+        this.activeId = null
       }
     },
 
@@ -176,22 +166,24 @@ export default {
     },
 
     resizeHandler (el) {
-      let {menu, extra} = this.$refs
-      let menuWidth = menu.getBoundingClientRect().width
-      let containerWidth = el.getBoundingClientRect().width
-      let marignWidth = parseInt(getComputedStyle(menu).marginRight, 10)
-      let stickyWidth = extra.getBoundingClientRect().width
+      let {menu, extra, scroller} = this.$refs
+      let menuWidth = menu.offsetWidth
+      let containerWidth = el.offsetWidth
+      let stickyWidth = extra.offsetWidth
 
-      this.menuOverflow = menuWidth < (containerWidth - marignWidth + stickyWidth)
-      if (!this.menuOverflow) {
-        // 本来用 padding 就完事了，ie9 不让 -  -
-        menu.style.marginRight = 0
-      } else {
-        // 需要 menuOverflow 对 dom 进行更新
-        this.$nextTick(() => {
-          menu.style.marginRight = extra.getBoundingClientRect().width + 'px'
-        })
-      }
+      let factor = this.menuOverflow
+        ? -(scroller.offsetWidth + parseInt(getComputedStyle(scroller).marginLeft, 10))
+        : stickyWidth
+      this.menuOverflow = menuWidth < (containerWidth + factor)
+      // 需要 menuOverflow 对 dom 进行更新
+      this.$nextTick(() => {
+        if (!this.menuOverflow) {
+          // 本来用 padding 就完事了，ie9 不让 -  -
+          menu.style.marginRight = 0
+        } else {
+          menu.style.marginRight = extra.offsetWidth + 'px'
+        }
+      })
     },
 
     scroll (direction) {
