@@ -5,7 +5,6 @@
   @warning: @veui-warning-color;
   @info: @veui-info-color;
   @error: @veui-alert-color;
-  .margin(30px, _);
   position: relative;
   padding: 10px 20px;
   color: @veui-text-color-normal;
@@ -24,11 +23,10 @@
     &-@{state} {
       @fg-color-name: ~"veui-@{state}-color";
       @bg-color-name: ~"veui-@{state}-color-10";
-
       background-color: @@bg-color-name;
 
       .veui-alert-icon {
-        color: @@fg-color-name;;
+        color: @@fg-color-name;
       }
     }
   }
@@ -62,7 +60,7 @@
     }
 
     &:hover,
-    &.focus-ring,
+    &.focus-visible,
     &:active {
       color: @veui-gray-color-1;
     }
@@ -72,7 +70,7 @@
     color: @veui-brand-color;
 
     &:hover,
-    &.focus-ring {
+    &.focus-visible {
       color: @veui-brand-color-2;
     }
 

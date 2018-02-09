@@ -15,7 +15,8 @@
 
 <script>
 import Icon from '../Icon'
-import { icons } from '../../mixins'
+import icons from '../../mixins/icons'
+import { getScrollParent } from '../../utils/dom'
 
 export default {
   name: 'veui-option',
@@ -43,6 +44,29 @@ export default {
       if (!this.disabled) {
         this.$emit('select', this.value)
       }
+    }
+  },
+  mounted () {
+    if (this.selected) {
+      this.$nextTick(() => {
+        let el = this.$el
+        let container = getScrollParent(el)
+        if (!container) {
+          return
+        }
+        let { top: cTop, bottom: cBottom } = container.getBoundingClientRect()
+        let { top: oTop, bottom: oBottom } = el.getBoundingClientRect()
+
+        // fully visible
+        if (oTop >= cTop && oBottom <= cBottom) {
+          return
+        }
+        if (oTop < cTop) {
+          container.scrollTop -= cTop - oTop
+        } else {
+          container.scrollTop += oBottom - cBottom
+        }
+      })
     }
   }
 }

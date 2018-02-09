@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { input, ui } from '../mixins'
+import input from '../mixins/input'
+import ui from '../mixins/ui'
 import { includes, findIndex } from 'lodash'
 import Button from './Button'
 
@@ -35,7 +36,7 @@ export default {
   },
   computed: {
     buttonUI () {
-      let allowed = ['alt', 'tiny', 'small', 'large']
+      let allowed = ['alt', 'micro', 'tiny', 'small', 'large']
       return this.uiProps.filter(ui => includes(allowed, ui)).join(' ')
     }
   },

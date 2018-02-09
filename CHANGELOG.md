@@ -1,8 +1,36 @@
+## 1.0.0-alpha.8
+
+### 💡 主要变更
+
+* [+] 增加了焦点管理模块。
+* [+] `Overlay` 组件增加 `autofocus` 和 `modal` 两个 prop，分别用来指定浮层是否需要抢占焦点、以及是否将后续焦点移动限制在浮层内。
+* [+] `Dialog` 组件增加 `escapable` prop，允许对话框通过按下 <kbd>esc</kbd> 键关闭。
+
+### 🐞 问题修复
+
+* [^] 修复了 `Select` 组件下拉菜单展开后自动将选中项滚动到可视范围时可能引起页面滚动的问题。
+* [^] `babel-plugin-veui` 及 `veui-loader` 内不再冗余生成组件列表，组件列表信息随 `veui` 包发布。
+
 ## 1.0.0-alpha.7
 
 ### ⚠️ 非兼容性变更
 
+* [^] 将对 `wicg-focus-ring@2.x` 的依赖更新为 `focus-visible` + `classlist-polyfill`，并且移入了 `veui-theme-one` 的 `dependencies`。使用 `veui-theme-one` 且需兼容 IE9 的项目需要同时引入这两个模块。同时 `veui-theme-one` 中的 `.focus-ring` 也均已升级为 `.focus-visible`。
+
+  > #### 迁移指南
+  >
+  > * 在主模块中删除 `import 'wicg-focus-ring'；
+  > * 安装上述包后，将引入语句替换为：
+  >
+  >   ```js
+  >   import 'classlist-polyfill'
+  >   import 'focus-visible'
+  >   ```
+
+* [^] 去除了 `veui-theme-one` 中 `Alert` 组件默认的上下 `margin`。
 * [^] `Column` 组件的 scoped slot `head` 和 `foot` 现在变更为 slot。
+* [-] 删除 `veui-theme-dux`。
+* [-] 删除 `Field` 组件 prop `rules` 默认可选表单校验规则 `maxByte` 和 `minByte`。
 
 ### 💡 主要变更
 
@@ -11,9 +39,13 @@
 * [^] `Column` 组件的默认 scoped slot 传入的参数现在会将列表项的数据展开，不需要多加一层 `item` 进行访问（与其它类似数据源的组件一致，需注意数据源对象中不能使用 `item`/`index` 作为属性名）。
 * [+] `Table` 组件新增 prop `key-field`，指明用哪一个 field 作为表格数据的键。当 `Table` 为 `selectable` 时，可以用来指定选择列纵向合并单元格的逻辑需要参照的列，以及选择逻辑返回的值来自哪一列。
 * [+] 优化 `Column` 组件注册到 `Table` 的逻辑，支持在模板中通过 `v-for`、`v-if` 等动态配置，并且将注册过程移入 `created` 生命周期以支持服务端渲染。
+* [^] `Breadcrumb` 组件 `routes` 数据项的文本域重命名为 `label`，保留了 `text` 的用法进行兼容。
 * [+] `Uploader` 组件增加 `statuschange` 事件，用于表单提交的时候校验是否还有文件正在上传或上传失败。
 * [+] `Uploader` 组件增加 prop `dataType`，用于指明回调的内容的格式。
 * [+] `Uploader` 组件 prop `name` 现在有默认值 `file`。
+* [+] `Field` 组件优化交互式校验规则显示顺序。
+* [+] `Field` prop `rules` 校验规则的出错消息支持传入函数。
+* [^] `Select` 组件被选中的选项现在会在浮层展开时自动滚动到可视范围。
 
 ### 🐞 问题修复
 
@@ -21,7 +53,10 @@
 * [^] 修复 `Tabs` 组件在仅指定 `active` 时会导致无法切换的问题。
 * [^] 修复 `Tooltip` 组件在 `target` 变化时会自动显示的问题。
 * [^] `Uploader` 组件的 `value` 不再包含正在上传中或上传失败的文件，不再包含 `status`等内部变量。
+* [^] 修复 `Uploader` 组件 `accept` prop 判断后缀的错误。
+* [^] 修复 `resize` 指令在 `target` 元素被移动过后丢失目标 `document` 的问题。
 * [^] 修复大小比较规则的提示信息。
+* [^] 修复使用 Popper 风格设置浮层 `position` 时解析不正确的问题。
 
 ## 1.0.0-alpha.6
 

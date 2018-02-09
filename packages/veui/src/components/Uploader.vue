@@ -125,7 +125,9 @@ import Button from './Button'
 import Icon from './Icon'
 import Tooltip from './Tooltip'
 import { cloneDeep, uniqueId, assign, isNumber, isArray, last, pick, omit, includes } from 'lodash'
-import { ui, input, icons } from '../mixins'
+import ui from '../mixins/ui'
+import input from '../mixins/input'
+import icons from '../mixins/icons'
 import config from '../managers/config'
 import { stringifyQuery } from '../utils/helper'
 import bytes from 'bytes'
@@ -188,9 +190,7 @@ export default {
     },
     convertResponse: {
       type: Function,
-      default () {
-        return config.get('uploader.convertResponse')
-      }
+      default: config.get('uploader.convertResponse') || function () {}
     },
     callbackNamespace: {
       type: String,
@@ -476,7 +476,7 @@ export default {
 
         if (acceptExtention === extension ||
           // 对于类似'application/msword'这样的mimetype与扩展名对不上的情形跳过校验
-          (acceptExtention !== '*' && item.indexOf('/'))) {
+          (acceptExtention !== '*' && item.indexOf('/') > -1)) {
           return true
         }
 

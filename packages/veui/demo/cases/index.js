@@ -31,6 +31,7 @@ import Carousel from './Carousel'
 import Transfer from './Transfer'
 import Schedule from './Schedule'
 import Textarea from './Textarea'
+import Icon from './Icon'
 
 export default [
   {
@@ -97,6 +98,11 @@ export default [
     path: '/form',
     name: 'Form',
     component: Form
+  },
+  {
+    path: '/icon',
+    name: 'Icon',
+    component: Icon
   },
   {
     path: '/input',

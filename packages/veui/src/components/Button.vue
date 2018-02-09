@@ -16,7 +16,7 @@
 <script>
 import { omit } from 'lodash'
 import Icon from './Icon'
-import { icons } from '../mixins'
+import icons from '../mixins/icons'
 
 export default {
   name: 'veui-button',
@@ -33,7 +33,6 @@ export default {
       default: 'button'
     },
     value: String,
-    autofocus: Boolean,
     loading: Boolean
   },
   computed: {
@@ -41,6 +40,11 @@ export default {
       let attrs = omit(this.$props, 'loading')
       attrs.disabled = this.disabled || this.loading
       return attrs
+    }
+  },
+  methods: {
+    focus () {
+      this.$el.focus()
     }
   }
 }

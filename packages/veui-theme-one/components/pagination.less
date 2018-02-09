@@ -26,6 +26,7 @@
   }
 
   &-info {
+    display: none;
     float: left;
     margin-right: @button-gap-width;
     line-height: @digit-height;
@@ -55,6 +56,9 @@
   }
 
   &-buttons {
+    float: left;
+    margin-left: @button-gap-width;
+
     a {
       .veui-button-transition();
     }
@@ -70,7 +74,7 @@
       background-color: @veui-gray-color-8;
     }
 
-    &.focus-ring {
+    &.focus-visible {
       color: @veui-brand-color;
     }
 
@@ -120,11 +124,6 @@
     }
   }
 
-  &-buttons {
-    float: left;
-    margin-left: @button-gap-width;
-  }
-
   &-previous,
   &-next {
     position: relative;
@@ -160,7 +159,7 @@
           color: @veui-text-color-strong;
         }
 
-        &.focus-ring {
+        &.focus-visible {
           color: @veui-link-color-active;
         }
       }
@@ -172,7 +171,6 @@
   }
 
   .generate-responsive-page-digit-width(@length, @scale-ratio: 1) when (@length > 2) {
-
     .veui-pager-digit-length-@{length} {
       li {
         width: (@digit-width + @digit-width-delta * (@length - 2)) * @scale-ratio;
@@ -207,10 +205,6 @@
       position: relative;
       margin-right: @button-gap-width;
     }
-  }
-
-  &-info {
-    display: none;
   }
 
   &[ui~="full"] {
