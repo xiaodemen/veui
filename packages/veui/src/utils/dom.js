@@ -104,14 +104,36 @@ export function getScrollParent (elem, includeSelf = false) {
   return getScrollParent(current, false)
 }
 
+const FOCUSABLE_SELECTOR = `
+a[href]:not([tabindex='-1']),
+area[href]:not([tabindex='-1']),
+input:not([disabled]):not([tabindex='-1']),
+select:not([disabled]):not([tabindex='-1']),
+textarea:not([disabled]):not([tabindex='-1']),
+button:not([disabled]):not([tabindex='-1']),
+iframe:not([tabindex='-1']),
+[tabindex]:not([tabindex='-1']),
+[contentEditable=true]:not([tabindex='-1'])`
+
+/**
+ * 获取目标元素下所有可以获取焦点的元素
+ *
+ * @param {Element} elem 需要查找的目标元素
+ * @returns {Array.<Element>} 可以获取焦点的元素数组
+ */
+export function getFocusable (elem) {
+  return [...elem.querySelectorAll(FOCUSABLE_SELECTOR)]
+}
+
 /**
  * 将焦点移入指定元素内的第一个可聚焦的元素
  *
  * @param {Element} elem 需要查找的指定元素
+ * @param {number=} index 聚焦元素在可聚焦元素的位置
  * @param {Boolean=} ignoreAutofocus 是否忽略 autofocus
  * @returns {Boolean} 是否找到可聚焦的元素
  */
-export function focusIn (elem, ignoreAutofocus) {
+export function focusIn (elem, index = 0, ignoreAutofocus) {
   if (!ignoreAutofocus) {
     let auto = elem.querySelector('[autofocus]')
     if (auto) {
@@ -120,20 +142,20 @@ export function focusIn (elem, ignoreAutofocus) {
     }
   }
 
-  let focusable = `
-    a[href]:not([tabindex='-1']),
-    area[href]:not([tabindex='-1']),
-    input:not([disabled]):not([tabindex='-1']),
-    select:not([disabled]):not([tabindex='-1']),
-    textarea:not([disabled]):not([tabindex='-1']),
-    button:not([disabled]):not([tabindex='-1']),
-    iframe:not([tabindex='-1']),
-    [tabindex]:not([tabindex='-1']),
-    [contentEditable=true]:not([tabindex='-1'])`
-  let first = elem.querySelector(focusable)
-  if (first) {
-    first.focus()
-    return true
+  if (index === 0) {
+    let first = elem.querySelector(FOCUSABLE_SELECTOR)
+    if (first) {
+      first.focus()
+      return true
+    }
   }
-  return false
+
+  let focusable = [...elem.querySelectorAll(FOCUSABLE_SELECTOR)]
+  let count = focusable.length
+  if (!count) {
+    return false
+  }
+
+  focusable[(index + count) % count].focus()
+  return true
 }

@@ -1,3 +1,49 @@
+## 1.0.0-alpha.9
+
+### ⚠️ 非兼容性变更
+
+* [^] 将对 Vue 的依赖更新到 `^2.5.13`。这使得使用 scoped slot 时，`scope` 需要改写为 `slot-scope`。由于 VEUI 内部已经使用 `slot-scope`，所以该版本无法与 `vue@2.5.0` 之前的版本一同使用。
+
+  > #### 迁移指南
+  >
+  > 请检查项目中所有用到
+  >
+  > ```html
+  > <template slot="..." scope="...">...</template>
+  > ```
+  >
+  > 的地方，统一替换为：
+  >
+  > ```html
+  > <template slot="..." slot-scope="...">...</template>
+  > ```
+  >
+  > 同时，由于 `vue@2.5.3` 修改了 slot 的逻辑，所以当代码中存在使用
+  >
+  > ```html
+  > <template slot="..."></template>
+  > ```
+  >
+  > 的写法来将 slot 内容置空时，现在会自动使用定义 slot 时备用内容填充而非置空，暂时的方法是使用一个零宽空格（`&#8203;`）来填充。
+
+### 💡 主要变更
+
+* [+] 为 `Tabs`、`ButtonGroup`、`Dialog`、`Calendar` 等数十个组件增加了键盘导航及 WAI-ARIA 支持。
+* [+] 新增 `Slider` 组件。
+* [+] 新增 `nudge` 指令。
+* [+] 新增 `OptionGroup` 组件。
+* [+] `Select`、`Dropdown` 组件支持直接组件内嵌写法。
+* [+] `Select`、`Dropdown` 组件支持键盘导航。
+
+### 🐞 问题修复
+
+* [^] 对话框现在可以整体获取焦点，避免点击无焦点区域后接收不到键盘事件的问题。
+* [^] 修正了 `PromptBox` 默认样式。
+* [^] 修正了 `RadioGroup` 的聚焦样式。
+* [^] 修复 `Textarea` 组件在显示行号模式下高度设置的问题。
+* [^] 修复 `drag` 指令的问题，防止在移动后窗口大小变化后产生的位置错误。
+* [^] 修复了 `Pagination` 组件在翻页按钮禁用时点击后依然抛出事件的问题。
+
 ## 1.0.0-alpha.8
 
 ### 💡 主要变更
@@ -5,6 +51,8 @@
 * [+] 增加了焦点管理模块。
 * [+] `Overlay` 组件增加 `autofocus` 和 `modal` 两个 prop，分别用来指定浮层是否需要抢占焦点、以及是否将后续焦点移动限制在浮层内。
 * [+] `Dialog` 组件增加 `escapable` prop，允许对话框通过按下 <kbd>esc</kbd> 键关闭。
+* [+] 为 `AlertBox`、`ConfirmBox`、`PromptBox` 增加了键盘交互（[#216](https://github.com/ecomfe/veui/issues/216)）。
+* [+] 增加了 `Input` 组件的 `tiny` 及 `micro` 尺寸样式。
 
 ### 🐞 问题修复
 

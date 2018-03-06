@@ -7,7 +7,11 @@
   line-height: @veui-font-size-large;
   cursor: pointer;
 
-  input,
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
   .veui-icon {
     display: none;
   }
@@ -26,6 +30,8 @@
     }
   }
 
+  & :focus ~ &-box,
+  & :focus ~ &-label,
   &:hover {
     color: @veui-text-color-strong;
   }

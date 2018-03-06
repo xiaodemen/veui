@@ -3,21 +3,19 @@
   :open.sync="localOpen"
   :ui="localUi"
   :closable="false"
-  :priority="priority">
-
+  :priority="priority"
+  role="alertdialog">
   <veui-icon v-if="icons[type]"
     class="veui-alert-box-icon"
     :name="icons[type]">
   </veui-icon>
-
   <h3 class="veui-alert-box-title">
-    <template v-if="!!title">{{ title }}</template>
+    <template v-if="title">{{ title }}</template>
     <slot name="title" v-else>title</slot>
   </h3>
   <div class="veui-alert-box-content">
     <slot>content</slot>
   </div>
-
   <template slot="foot">
     <veui-button autofocus @click="$emit('ok')">知道了</veui-button>
   </template>

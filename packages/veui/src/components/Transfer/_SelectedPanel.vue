@@ -18,14 +18,14 @@
       </slot>
     </template>
 
-    <template scope="props">
+    <template slot-scope="props">
       <veui-tree
         :datasource="props.options"
         :expands.sync="localExpands"
         @click="remove"
         class="veui-transfer-selected-tree"
         v-if="showMode === 'tree'">
-        <template slot="item" scope="props">
+        <template slot="item" slot-scope="props">
           <slot name="item" v-bind="props">
             <div class="veui-transfer-selected-item"
               :class="{'veui-transfer-selected-item-hidden': props.option.hidden}">
@@ -60,8 +60,8 @@
           <slot name="item" :option="options.items" :index="index">
             <div class="veui-transfer-selected-flat-item-label">
               <template v-for="(opt, index) in options.items">
-                <span :key="opt.value" class="veui-transfer-selected-flat-option-label">{{ opt.label }}</span>
-                <span :key="opt.value"
+                <span :key="'l-' + opt.value" class="veui-transfer-selected-flat-option-label">{{ opt.label }}</span>
+                <span :key="'s-' + opt.value"
                   class="veui-transfer-selected-flat-option-separator"
                   v-if="index < options.items.length - 1">
                   <veui-icon :name="icons.separator"></veui-icon>

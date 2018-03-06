@@ -164,6 +164,10 @@
     "path": "Select/Option.vue"
   },
   {
+    "name": "OptionGroup",
+    "path": "Select/OptionGroup.vue"
+  },
+  {
     "name": "Select",
     "path": "Select/Select.vue"
   },
@@ -174,6 +178,10 @@
   {
     "name": "Select",
     "path": "Select/index.js"
+  },
+  {
+    "name": "Slider",
+    "path": "Slider.vue"
   },
   {
     "name": "Sorter",

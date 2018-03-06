@@ -6,21 +6,22 @@
       'veui-dialog-box-mask': modal
     })"
     :ui="ui"
-    ref="overlay"
     autofocus
     :modal="modal"
     :priority="priority">
     <div class="veui-dialog-content"
       ref="content"
-      @mousedown="focus"
-      @keydown.esc="handleEscape">
+      tabindex="-1"
+      @keydown.esc="handleEscape"
+      v-bind="attrs">
       <div class="veui-dialog-content-head"
         :class="{ 'veui-dialog-draggable': draggable }"
         v-drag:content.translate="{ draggable, containment: '@window', ready: dragReady }">
         <span class="veui-dialog-content-head-title"><slot name="title">{{ title }}</slot></span>
-        <button class="veui-dialog-content-head-close"
+        <button type="button" class="veui-dialog-content-head-close"
           v-if="closable"
-          @click="localOpen = false">
+          @click="localOpen = false"
+          aria-label="关闭">
           <veui-icon :name="icons.close"></veui-icon>
         </button>
       </div>
@@ -51,6 +52,7 @@ export default {
     'veui-button': Button,
     'veui-icon': Icon
   },
+  inheritAttrs: false,
   directives: { drag },
   mixins: [ui, icons, overlay],
   props: {
@@ -87,6 +89,13 @@ export default {
     }
   },
   computed: {
+    attrs () {
+      return {
+        role: 'dialog',
+        'aria-modal': String(this.modal),
+        ...this.$attrs
+      }
+    },
     realEscapable () {
       return this.closable || this.escapable
     }
@@ -102,11 +111,6 @@ export default {
     }
   },
   methods: {
-    focus () {
-      if (this.$refs.overlay) {
-        this.$refs.overlay.focus()
-      }
-    },
     dragReady (handle) {
       this.dragHandle = handle
     },

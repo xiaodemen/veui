@@ -20,7 +20,7 @@
     <section>
       <h2>多时间段选择带 scoped slot <small>(<code>multiple</code> &amp; <code>range</code>)</small></h2>
       <veui-calendar v-model="selected3" range multiple :panel="3">
-        <template slot="date" scope="day">{{ day.date }} <span v-if="day.date % 7 === 0" style="position: absolute;">*</span></template>
+        <template slot="date" slot-scope="day">{{ day.date }} <span v-if="day.date % 7 === 0" style="position: absolute;">*</span></template>
       </veui-calendar>
     </section>
     <section>
@@ -49,7 +49,7 @@ export default {
       selected3: [[new Date(2017, 3, 12), new Date(2017, 3, 18)], [new Date(2017, 3, 22), new Date(2017, 3, 24)]],
       selected4: [new Date(2016, 11, 19), new Date(2016, 11, 25)],
       isDisabled (day) {
-        return !(day.getDate() % 5)
+        return !(day.getDate() % 5) || day.getDate() === 1
       },
       dateClass (day) {
         if ((day.getDay() + 1) % 7 < 2) {

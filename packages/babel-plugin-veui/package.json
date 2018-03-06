@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-veui",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Import VEUI components with ease.",
   "main": "lib/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "Justineo (justice360@gmail.com)",
   "license": "MIT",
   "dependencies": {
-    "veui": "^1.0.0-alpha.7"
+    "veui": "^1.0.0-alpha.8"
   },
   "devDependencies": {
     "ava": "^0.20.0",
@@ -33,8 +33,6 @@
     "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "lerna": "^2.5.1",
-    "node-dir": "^0.1.17",
-    "pkg-dir": "^2.0.0"
+    "lerna": "^2.5.1"
   }
 }
