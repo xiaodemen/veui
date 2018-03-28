@@ -6,19 +6,21 @@
     ref="box"
     :style="{zIndex}"
     v-show="open">
-    <slot></slot>
+    <slot/>
   </div>
 </div>
 </template>
 
 <script>
 import Tether from 'tether'
-import { assign, includes, get } from 'lodash'
+import { assign } from 'lodash'
 import { getNodes } from '../utils/context'
 import overlayManager from '../managers/overlay'
 import focusManager from '../managers/focus'
 import config from '../managers/config'
-import { getClassPropDef } from '../utils/helper'
+import ui from '../mixins/ui'
+import { getClassPropDef, isType } from '../utils/helper'
+import '../config/uiTypes'
 
 config.defaults({
   'overlay.baseZIndex': 200
@@ -29,9 +31,9 @@ overlayManager.setBaseZIndex(config.get('overlay.baseZIndex'))
 export default {
   name: 'veui-overlay',
   uiTypes: ['overlay'],
+  mixins: [ui],
   props: {
     overlayClass: getClassPropDef(),
-    ui: String,
     open: Boolean,
     target: {
       default: null
@@ -132,6 +134,7 @@ export default {
 
         if (!this.tether) {
           this.tether = new Tether(options)
+          this.tether.on('repositioned', () => { this.$emit('locate') })
         } else {
           this.tether.setOptions(options)
         }
@@ -159,7 +162,7 @@ export default {
     },
 
     isOverlay (componentInstance) {
-      return includes(get(componentInstance, '$options.uiTypes', []), 'overlay')
+      return isType(componentInstance, 'overlay')
     },
 
     focus () {

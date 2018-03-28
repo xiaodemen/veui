@@ -6,14 +6,14 @@
     }"></div>
   </div>
   <svg v-else-if="type === 'circular'" class="veui-progress-circle"
-    :width="(radius + 1) * 2" :height="(radius + 1) * 2">
-    <circle class="veui-progress-rail" :cx="radius + 1" :cy="radius + 1" :r="radius" fill="none" stroke-width="2"></circle>
-    <circle class="veui-progress-meter" :cx="radius + 1" :cy="radius + 1" :r="radius" fill="none" stroke-width="2"
+    :width="(radius + halfStroke) * 2" :height="(radius + halfStroke) * 2">
+    <circle class="veui-progress-rail" :cx="radius + halfStroke" :cy="radius + halfStroke" :r="radius" fill="none" :stroke-width="stroke"></circle>
+    <circle class="veui-progress-meter" :cx="radius + halfStroke" :cy="radius + halfStroke" :r="radius" fill="none" :stroke-width="stroke"
       :stroke-dasharray="circumference" :stroke-dashoffset="circumference * (1 - ratio)"></circle>
   </svg>
   <div v-if="desc" class="veui-progress-desc">
     <slot v-bind="{ percent, value, state }">
-      <veui-icon :name="icons.success" v-if="type === 'circular' && localState === 'success'"></veui-icon>
+      <veui-icon :name="icons.success" v-if="type === 'circular' && localState === 'success'"/>
       <span class="veui-progress-desc-text">
         <template v-if="localState === 'success'">完成</template>
         <template v-else-if="localState === 'alert'">错误</template>
@@ -26,21 +26,18 @@
 
 <script>
 import ui from '../mixins/ui'
-import icons from '../mixins/icons'
-import { includes } from 'lodash'
 import Icon from './Icon'
 
-const RADIUS_NORMAL = 60
-const RADIUS_TINY = 13
+const RADIUS_DEFAULT = 60
+const STROKE_DEFAULT = 2
 
 export default {
   name: 'veui-progress',
-  mixins: [ui, icons],
+  mixins: [ui],
   components: {
     'veui-icon': Icon
   },
   props: {
-    ui: String,
     type: {
       type: String,
       default: 'bar'
@@ -94,7 +91,13 @@ export default {
       return 2 * Math.PI * this.radius
     },
     radius () {
-      return includes(this.uiProps, 'tiny') ? RADIUS_TINY : RADIUS_NORMAL
+      return this.uiData.radius || RADIUS_DEFAULT
+    },
+    stroke () {
+      return this.uiData.stroke || STROKE_DEFAULT
+    },
+    halfStroke () {
+      return this.stroke / 2
     }
   },
   watch: {

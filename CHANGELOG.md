@@ -1,3 +1,40 @@
+## 1.0.0-alpha.10
+
+### ⚠️ 非兼容性变更
+
+* [^] `AlertBox` 组件，之前只能通过 `ui` prop 传递类型信息（ `success`/`error`/`info` ），现在和 `Toast` 保持风格统一，使用 `type` prop 传递类型信息。
+
+  > #### 迁移指南
+  >
+  > **对于非如下两种情况的用户，本次变更并不产生影响。**
+  >
+  > 1. 所有直接使用 `AlertBox` 的情况下，需要将如 `ui="success"` 修改为 `type="success"` 的方式进行指定。
+  >
+  > 2. 对于主题包的作者，需要将原来针对如 `[ui~="success"]` 编写的样式，修改为 `.veui-alert-box-success。`
+
+### 💡 主要变更
+
+* [+] 为 `Select` 增加了 `filter` prop，用来过滤下拉内容。
+* [+] 为 `OptionGroup` 增加了 `position` prop，用来指定在弹出菜单中显示。
+* [+] 为 `Option` 增加了 `hidden` prop。
+* [+] 为 `Overlay` 增加了 `locate` 事件，在位置发生变化时触发（时机为 `tether` 的 `reposition` 事件）。
+* [^] 为 `uiTypes` 定制了选项合并策略，并修正了 `Select` 组件在 `uiTypes` 中声明的 `input` 被 mixin 中加入的 `select` 覆盖的问题。
+* [+] `Searchbox` 组件增加 `suggest-trigger` prop，用来指定推荐列表的弹出时机；增加 `suggest` 事件，当需要显示推荐列表时触发。
+* [+] `Field` 的 `rules` 中增加 `priority` 的配置，用来覆盖当前内置的规则优先级。
+* [^] 将 `icons` mixin 并入 `ui`,
+* [+] 支持配置 `ui` prop 项的元数据，以支持进一步校验及根据 `ui` 值配置图标。
+* [^] 将 `Progress` 组件硬编码在组件代码中的尺寸解耦到 `veui-theme-one` 中，现在组件可以从主题包的 JS 模块中注入预定义的样式参数。
+
+### 🐞 问题修复
+
+* [^] 去除了 `Link` 组件中错误注册组件的代码。
+* [^] 修复了关闭非 `modal` 的 `Dialog` 时 `FocusManager` 报错的问题。
+* [^] 修复了 `FocusManager` 在 `trap` 模式下会自动聚焦最后一个元素的问题。
+* [^] 修复了 `Textarea` 组件在 IE9 下的兼容性问题。
+* [^] 修复了 `Field` 组件使用 `slot` 时 `class` 判断遗漏的问题。
+* [^] 修复了 `pattern`/`numeric` 校验规则的优先级，使 `pattern` 置于 `numeric` 之后。
+* [^] 去除了 `rule` 校验失败信息中包含部分校验成功的无用信息。
+
 ## 1.0.0-alpha.9
 
 ### ⚠️ 非兼容性变更

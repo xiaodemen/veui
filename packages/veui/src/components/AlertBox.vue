@@ -1,7 +1,9 @@
 <template>
-<veui-dialog :overlay-class="mergeOverlayClass('veui-alert-box')"
+<veui-dialog :overlay-class="mergeOverlayClass({
+    'veui-alert-box': true,
+    [`veui-alert-box-${type}`]: true
+  })"
   :open.sync="localOpen"
-  :ui="localUi"
   :closable="false"
   :priority="priority"
   role="alertdialog">
@@ -14,7 +16,7 @@
     <slot name="title" v-else>title</slot>
   </h3>
   <div class="veui-alert-box-content">
-    <slot>content</slot>
+    <slot/>
   </div>
   <template slot="foot">
     <veui-button autofocus @click="$emit('ok')">知道了</veui-button>
@@ -23,12 +25,12 @@
 </template>
 
 <script>
-import { pick, find, includes } from 'lodash'
+import { pick, includes } from 'lodash'
 import Dialog from './Dialog'
 import Button from './Button'
 import Icon from './Icon'
 import config from '../managers/config'
-import icons from '../mixins/icons'
+import ui from '../mixins/ui'
 import overlay from '../mixins/overlay'
 
 config.defaults({
@@ -37,8 +39,17 @@ config.defaults({
 
 export default {
   name: 'veui-alert-box',
-  mixins: [icons, overlay],
-  props: pick(Dialog.props, ['open', 'title', 'ui']),
+  mixins: [ui, overlay],
+  props: {
+    ...pick(Dialog.props, ['open', 'title']),
+    type: {
+      type: String,
+      validator (val) {
+        return includes(['success', 'error', 'info'], val)
+      },
+      default: 'success'
+    }
+  },
   components: {
     'veui-dialog': Dialog,
     'veui-button': Button,
@@ -48,17 +59,6 @@ export default {
     return {
       localOpen: this.open,
       priority: config.get('alertbox.priority')
-    }
-  },
-  computed: {
-    uis () {
-      return [...(this.ui || '').split(/\s+/), 'reverse']
-    },
-    localUi () {
-      return this.uis.join(' ')
-    },
-    type () {
-      return find(this.uis, ui => includes(['success', 'error', 'info'], ui))
     }
   },
   watch: {

@@ -1,11 +1,24 @@
 <template>
-<div :ui="ui" class="veui-field" :class="{'veui-field-invalid': !validity.valid, 'veui-field-no-label': !label, 'veui-field-no-tip': !tip, 'veui-field-required': isRequired}">
+<div
+  :ui="ui"
+  :class="{
+    'veui-field': true,
+    'veui-field-invalid': !validity.valid,
+    'veui-field-no-label': !label && !$slots.label,
+    'veui-field-no-tip': !tip && !$slots.tip,
+    'veui-field-required': isRequired
+  }"
+>
   <span v-if="label || $slots.label" class="veui-form-label">
     <slot name="label"><veui-label>{{ label }}</veui-label></slot>
   </span>
-  <slot></slot>
+  <slot/>
   <span v-if="tip || $slots.tip" class="veui-form-tip"><slot name="tip">{{ tip }}</slot></span>
-  <p v-if="!validity.valid && !!validity.message" class="veui-field-error" :title="validity.message"><veui-icon :name="icons.alert"></veui-icon>{{ validity.message }}</p>
+  <p
+    v-if="!validity.valid && !!validity.message"
+    class="veui-field-error"
+    :title="validity.message"
+  ><veui-icon :name="icons.alert"/>{{ validity.message }}</p>
 </div>
 </template>
 
@@ -13,11 +26,12 @@
 import Label from '../Label'
 import type from '../../managers/type'
 import rule from '../../managers/rule'
-import icons from '../../mixins/icons'
+import ui from '../../mixins/ui'
 import { isBoolean, get, last, includes } from 'lodash'
 import { getTypedAncestorTracker } from '../../utils/helper'
 import Icon from '../Icon'
 import Vue from 'vue'
+import '../../config/uiTypes'
 
 const { computed: form } = getTypedAncestorTracker('form')
 const { computed: fieldset } = getTypedAncestorTracker('fieldset')
@@ -25,13 +39,12 @@ const { computed: fieldset } = getTypedAncestorTracker('fieldset')
 export default {
   name: 'veui-field',
   uiTypes: ['field', 'form-container'],
-  mixins: [icons],
+  mixins: [ui],
   components: {
     'veui-icon': Icon,
     'veui-label': Label
   },
   props: {
-    ui: String,
     label: String,
     name: String,
     tip: String,

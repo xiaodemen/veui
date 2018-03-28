@@ -36,8 +36,6 @@ class FocusContext {
    * 2. focus `root` by default
    */
   init () {
-    this.focusAt()
-
     if (this.trap) {
       let before = document.createElement('div')
       before.tabIndex = 0
@@ -52,6 +50,9 @@ class FocusContext {
       this.wardBefore = before
       this.wardAfter = after
     }
+
+    // skip wardBefore if trapping
+    this.focusAt(this.trap ? 1 : 0)
   }
 
   focusAt (index = 0, ignoreAutofocus) {
@@ -67,6 +68,8 @@ class FocusContext {
     if (trap) {
       wardBefore.removeEventListener('focus', this.outsideStartHandler, true)
       wardAfter.removeEventListener('focus', this.outsideEndHandler, true)
+      this.root.removeChild(wardBefore)
+      this.root.removeChild(wardAfter)
     }
     if (source && typeof source.focus === 'function') {
       this.source = null
@@ -77,8 +80,6 @@ class FocusContext {
         source.focus()
       }, 0)
     }
-    this.root.removeChild(wardBefore)
-    this.root.removeChild(wardAfter)
     this.preferred = null
     this.root = null
   }

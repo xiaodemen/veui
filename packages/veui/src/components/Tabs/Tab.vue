@@ -1,6 +1,6 @@
 <template>
 <div class="veui-tab" v-show="isActive" role="tabpanel" :aria-hidden="String(!isActive)">
-  <slot v-if="isInited || isActive"></slot>
+  <slot v-if="isInited || isActive"/>
 </div>
 </template>
 
@@ -8,6 +8,7 @@
 import { pick, find, uniqueId } from 'lodash'
 import { getTypedAncestorTracker } from '../../utils/helper'
 import { getIndexOfType } from '../../utils/context'
+import '../../config/uiTypes'
 
 export default {
   name: 'veui-tab',
