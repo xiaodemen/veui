@@ -7,6 +7,8 @@
     class="veui-dropdown-button"
     :ui="ui"
     :disabled="disabled"
+    aria-haspopup="menu"
+    :aria-disabled="String(this.disabled)"
     @keydown.down.up.prevent="expanded = true"
     @click="expanded = !expanded"
     ref="button">
@@ -29,7 +31,9 @@
       class="veui-dropdown-options"
       v-outside:button="close"
       tabindex="-1"
+      role="menu"
       :ui="ui"
+      :aria-expanded="String(expanded)"
       @keydown.esc.stop="expanded = false"
       @keydown.down.prevent="navigate()"
       @keydown.up.prevent="navigate(false)">
@@ -59,7 +63,7 @@ import ui from '../mixins/ui'
 import overlay from '../mixins/overlay'
 import dropdown from '../mixins/dropdown'
 import keySelect from '../mixins/key-select'
-import '../config/uiTypes'
+import '../common/uiTypes'
 
 export default {
   name: 'veui-dropdown',

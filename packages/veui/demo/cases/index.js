@@ -3,7 +3,7 @@ import Table from './Table'
 import Pagination from './Pagination'
 import Uploader from './Uploader'
 import Dialog from './Dialog'
-// import Overlay from './Overlay'
+import Overlay from './Overlay'
 import Breadcrumb from './Breadcrumb'
 import Input from './Input'
 import Form from './Form'
@@ -33,6 +33,7 @@ import Schedule from './Schedule'
 import Textarea from './Textarea'
 import Icon from './Icon'
 import Slider from './Slider'
+import NumberInput from './NumberInput'
 
 export default [
   {
@@ -110,11 +111,16 @@ export default [
     name: 'Input',
     component: Input
   },
-  // {
-  //   path: '/overlay',
-  //   name: 'Overlay',
-  //   component: Overlay
-  // },
+  {
+    path: '/number-input',
+    name: 'NumberInput',
+    component: NumberInput
+  },
+  {
+    path: '/overlay',
+    name: 'Overlay',
+    component: Overlay
+  },
   {
     path: '/pagination/:page?',
     name: 'Pagination',

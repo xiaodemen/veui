@@ -2,44 +2,78 @@
 @import (reference) "../input.less";
 
 .veui-input {
-
   .make-line-height(@height) {
     height: @height;
     line-height: @height - 2px;
+  }
+
+  overflow: hidden;
+  display: inline-table;
+  position: relative;
+  .make-line-height(@veui-height-normal);
+  width: @veui-width-normal;
+  border: 1px solid @veui-gray-color-5;
+  background-color: #fff;
+  color: @veui-text-color-normal;
+  transition: border-color .2s, color .2s;
+
+  &-hidden {
+    display: none !important;
+  }
+
+  &-before,
+  &-main,
+  &-after {
+    display: table-cell;
+    vertical-align: top;
+    height: 100%;
+  }
+
+  &-main {
+    width: 100%;
+  }
+
+  &-input {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+    background-color: transparent;
+    text-overflow: ellipsis;
   }
 
   .veui-field-invalid & {
     &:extend(._veui-input-invalid all);
   }
 
-  .make-line-height(@veui-height-normal);
-  width: @veui-width-normal;
-  padding: 0 10px;
-  vertical-align: middle;
-  border: 1px solid @veui-gray-color-5;
-  background-color: #fff;
-  color: @veui-text-color-normal;
-  transition: border-color .2s, color .2s;
-
-  &:hover {
+  &:hover,
+  &-focused {
     border-color: @veui-gray-color-3;
   }
 
-  &:focus {
-    outline: none;
-    border-color: @veui-gray-color-3;
+  &-focused {
     color: @veui-text-color-strong;
   }
 
-  &:read-only,
-  &:disabled {
+  &.veui-readonly,
+  &.veui-disabled {
     background-color: @veui-gray-color-8;
-    border-color: @veui-gray-color-5;
-    color: @veui-text-color-weak;
+
+    &,
+    &:hover {
+      border-color: @veui-gray-color-5;
+      color: @veui-text-color-weak;
+    }
   }
 
-  &:disabled {
-    cursor: not-allowed;
+  &.veui-disabled {
+    &,
+    & .veui-input-input {
+      cursor: not-allowed;
+    }
   }
 
   &::placeholder {
@@ -64,6 +98,5 @@
   &[ui~="micro"] {
     .make-line-height(@veui-height-micro);
     font-size: @veui-font-size-small;
-    // padding: 0 4px;
   }
 }

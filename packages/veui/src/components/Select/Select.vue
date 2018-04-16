@@ -12,7 +12,7 @@ import dropdown from '../../mixins/dropdown'
 import warn from '../../utils/warn'
 import { walk } from '../../utils/data'
 import { cloneDeep } from 'lodash'
-import '../../config/uiTypes'
+import '../../common/uiTypes'
 
 export default {
   name: 'veui-select',
@@ -85,12 +85,17 @@ export default {
         ref="button"
         class="veui-select-button"
         ui={this.ui}
+        aria-haspopup="listbox"
+        aria-disabled={String(this.realDisabled)}
+        aria-readonly={String(this.realReadonly)}
         disabled={this.realDisabled || this.realReadonly}
         onKeydown={this.handleButtonKeydown}
         onClick={this.handleButtonClick}>
         <span class="veui-select-label">
           {
-            this.$scopedSlots.label ? this.$scopedSlots.label({ label: this.label }) : this.label
+            this.$scopedSlots.label
+              ? this.$scopedSlots.label({ label: this.label })
+              : this.label
           }
         </span>
         <veui-icon
@@ -121,6 +126,8 @@ export default {
                 }]
               }}
               tabindex="-1"
+              role="listbox"
+              aria-expanded={String(this.expanded)}
               ui={this.ui}
               onKeydown={this.handleKeydown}>
               {this.$slots.before}
@@ -134,15 +141,9 @@ export default {
                 options={this.realOptions}
                 ui={this.ui}
                 scopedSlots={{
-                  label: this.$scopedSlots['group-label']
-                    ? group => this.$scopedSlots['group-label'](group)
-                    : null,
-                  option: this.$scopedSlots.option
-                    ? option => this.$scopedSlots.option(option)
-                    : null,
-                  'option-label': this.$scopedSlots['option-label']
-                    ? option => this.$scopedSlots['option-label'](option)
-                    : null
+                  label: this.$scopedSlots['group-label'] || null,
+                  option: this.$scopedSlots.option || null,
+                  'option-label': this.$scopedSlots['option-label'] || null
                 }}>
                 {this.$slots.default}
               </veui-option-group>

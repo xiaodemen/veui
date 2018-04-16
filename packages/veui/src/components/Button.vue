@@ -17,8 +17,9 @@
 import { omit } from 'lodash'
 import Icon from './Icon'
 import ui from '../mixins/ui'
+import { getListeners } from '../utils/helper'
 
-const EVENTS = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup', 'keypress', 'focus']
+const EVENTS = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup', 'keypress', 'focus', 'blur']
 
 export default {
   name: 'veui-button',
@@ -43,12 +44,7 @@ export default {
       return attrs
     },
     listeners () {
-      return EVENTS.reduce((listeners, type) => {
-        listeners[type] = e => {
-          this.$emit(type, e)
-        }
-        return listeners
-      }, {})
+      return getListeners(EVENTS, this)
     }
   },
   methods: {

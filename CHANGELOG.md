@@ -1,3 +1,54 @@
+## 1.0.0-alpha.12
+
+### ⚠️ 非兼容性变更
+
+* [^] `Uploader` 组件在 `maxCount` 的值是 `1` 的情况下，`value` 的默认类型从字符串改成对象，可以通过设置 prop `compat` 为 `true` 将 `value` 的类型设置为字符串兼容旧版本。
+* [^] 修改了 `Radio` 组件的 `v-model` 语义，现在机制和 Vue.js 对原生 `<input type="radio">` 的处理保持一致。
+
+  > #### 迁移指南
+  >
+  > ##### `Uploader` 组件
+  >
+  > `Uploader` 在 `max-count` 为 `1` 时的 `value` prop 数据类型修改为对象，和多文件时的数组项相同。需要兼容原字符串数据格式时，需要设置 `compat` prop 为 `true`：
+  >
+  > ```html
+  > <veui-uploader compat .../>
+  > ```
+  >
+  > ##### `Radio` 组件
+  >
+  > 此版本前的 `Radio` 组件的 `v-model` 对应 `checked` 属性，但由于之前的版本中存在多个同 `name` 的 `Radio` 组件时，被取消选中的单选框并不会响应数据变化，导致实际 `v-model` 并不完全可用。新版本在使用 `v-model` 的场景下修复了这个问题，并把逻辑和 Vue.js 对原生元素的处理方式进行了对齐。
+  >
+  > ```html
+  > <veui-radio value="html" name="lang" v-model="lang"/>
+  > <veui-radio value="css" name="lang" v-model="lang"/>
+  > <veui-radio value="javascript" name="lang" v-model="lang"/>
+  > ```
+  >
+  > 通过将多个 `Radio` 组件的 `v-model` 绑定到同一个数据项，即可完成数据的双向绑定。注意，仍然建议使用 `name` 属性来正确表达分组。这将会影响元素的可访问性。
+  >
+  > 同时，更建议使用 `RadioGroup` 组件来实现单选组，因为它会有更简单的 API 和可访问性。
+
+### 💡 主要变更
+
+* [+] `NumberInput` 新增 `max`/`min` prop，优先从直接父组件 `Field` 的 prop `rule` 中继承 `max`/`min` rule 的值。
+* [^] `Uploader` 组件的事件 `success`、`failure`、`remove` 增加参数：当前处理文件的序号。
+* [^] `Uploader` 组件在重新上传的时候不再触发 `remove` 事件。
+* [^] 将 `Progress` 组件的 `precision` prop 重命名为和 `NumberInput` 一致的 `decimal-place`。`precision` 将在未来版本被移除。
+* [^] 增加了 `Select`、`Dropdown`、`Carousel`、`Pagination` 及 `Progress` 等组件的 WAI-ARIA 支持。
+
+### 🐞 问题修复
+
+* [^] 修复了 `Textarea` 触发事件时没有正确处理 `this` 的问题。
+* [^] 修复了 `NumberInput` 在只读状态下可以用键盘上下键调整值的问题。
+* [^] 修复了 `outside` 指令设置 `delay` 时未清除定时器的问题。
+
+## 1.0.0-alpha.11
+
+### 🐞 问题修复
+
+* [^] 修复了 `config/uiTypes.js` 命中 `npmignore` 规则被过滤的问题。
+
 ## 1.0.0-alpha.10
 
 ### ⚠️ 非兼容性变更
@@ -10,23 +61,29 @@
   >
   > 1. 所有直接使用 `AlertBox` 的情况下，需要将如 `ui="success"` 修改为 `type="success"` 的方式进行指定。
   >
-  > 2. 对于主题包的作者，需要将原来针对如 `[ui~="success"]` 编写的样式，修改为 `.veui-alert-box-success。`
+  > 2. 对于主题包的作者，需要将原来针对如 `[ui~="success"]` 编写的样式，修改为 `.veui-alert-box-success`。
+
+* [-] **[预告]** `Input` 组件的 `type` prop 将在下个版本去除对 `textarea` 的支持，请使用 `Textarea` 组件代替。
 
 ### 💡 主要变更
 
+* [+] 新增了 `NumberInput` 组件。
+* [+] 为 `Input` 增加了 `before`/`after` slot，提供扩展的空间。
 * [+] 为 `Select` 增加了 `filter` prop，用来过滤下拉内容。
 * [+] 为 `OptionGroup` 增加了 `position` prop，用来指定在弹出菜单中显示。
 * [+] 为 `Option` 增加了 `hidden` prop。
 * [+] 为 `Overlay` 增加了 `locate` 事件，在位置发生变化时触发（时机为 `tether` 的 `reposition` 事件）。
-* [^] 为 `uiTypes` 定制了选项合并策略，并修正了 `Select` 组件在 `uiTypes` 中声明的 `input` 被 mixin 中加入的 `select` 覆盖的问题。
 * [+] `Searchbox` 组件增加 `suggest-trigger` prop，用来指定推荐列表的弹出时机；增加 `suggest` 事件，当需要显示推荐列表时触发。
 * [+] `Field` 的 `rules` 中增加 `priority` 的配置，用来覆盖当前内置的规则优先级。
 * [^] 将 `icons` mixin 并入 `ui`,
 * [+] 支持配置 `ui` prop 项的元数据，以支持进一步校验及根据 `ui` 值配置图标。
 * [^] 将 `Progress` 组件硬编码在组件代码中的尺寸解耦到 `veui-theme-one` 中，现在组件可以从主题包的 JS 模块中注入预定义的样式参数。
+* [+] `Uploader` 组件的 `image` 模式在图片的遮罩层上增加 scoped-slot `extra-operation`；在上传项目前后分别增加 `file-before` 和 `file-after` 两个 scoped slot。
+* [^] `Uploader` 组件增加 prop `order`，配置新上传文件的插入顺序。
 
 ### 🐞 问题修复
 
+* [^] 为 `uiTypes` 定制了选项合并策略，并修正了 `Select` 组件在 `uiTypes` 中声明的 `input` 被 mixin 中加入的 `select` 覆盖的问题。
 * [^] 去除了 `Link` 组件中错误注册组件的代码。
 * [^] 修复了关闭非 `modal` 的 `Dialog` 时 `FocusManager` 报错的问题。
 * [^] 修复了 `FocusManager` 在 `trap` 模式下会自动聚焦最后一个元素的问题。
@@ -34,6 +91,7 @@
 * [^] 修复了 `Field` 组件使用 `slot` 时 `class` 判断遗漏的问题。
 * [^] 修复了 `pattern`/`numeric` 校验规则的优先级，使 `pattern` 置于 `numeric` 之后。
 * [^] 去除了 `rule` 校验失败信息中包含部分校验成功的无用信息。
+* [^] 去除了 `Input` 部分过时的 prop。
 
 ## 1.0.0-alpha.9
 
@@ -126,7 +184,7 @@
 * [+] 优化 `Column` 组件注册到 `Table` 的逻辑，支持在模板中通过 `v-for`、`v-if` 等动态配置，并且将注册过程移入 `created` 生命周期以支持服务端渲染。
 * [^] `Breadcrumb` 组件 `routes` 数据项的文本域重命名为 `label`，保留了 `text` 的用法进行兼容。
 * [+] `Uploader` 组件增加 `statuschange` 事件，用于表单提交的时候校验是否还有文件正在上传或上传失败。
-* [+] `Uploader` 组件增加 prop `dataType`，用于指明回调的内容的格式。
+* [+] `Uploader` 组件增加 prop `data-type`，用于指明回调的内容的格式。
 * [+] `Uploader` 组件 prop `name` 现在有默认值 `file`。
 * [+] `Field` 组件优化交互式校验规则显示顺序。
 * [+] `Field` prop `rules` 校验规则的出错消息支持传入函数。
@@ -339,7 +397,7 @@
 * [^] 修复了 `Table` 组件在选择时会修改未添加 `.sync` 的 `selected` prop 的问题。
 * [+] 增加了 `Pager` 每页显示数和默认选项的全局配置。
 * [+] 修复了 `Pager` 在没有数据时下一页按钮没有禁用的问题。
-* [^] 重命名 `Pager` 的 `pageTotal` prop 为 `total`，旧名称仍然兼容，未来版本可能删除。
+* [^] 重命名 `Pager` 的 `page-total` prop 为 `total`，旧名称仍然兼容，未来版本可能删除。
 
 ## 0.2.0
 
