@@ -4,6 +4,8 @@
     'veui-input': true,
     'veui-input-focused': focused,
     'veui-input-hidden': type === 'hidden',
+    'veui-input-invalid': realInvalid,
+    'veui-input-autofill': autofill,
     'veui-readonly': realReadonly,
     'veui-disabled': realDisabled
   }"
@@ -16,7 +18,7 @@
     <span
       @selectstart.prevent="() => false"
       class="veui-input-placeholder"
-      v-if="isOldVersion && type !== 'hidden'"
+      v-if="type !== 'hidden'"
       v-show="placeholderShown"
     >{{ placeholder }}</span>
     <input
@@ -88,13 +90,14 @@ export default {
     return {
       focused: false,
       localValue: this.value,
-      compositionValue: this.value
+      compositionValue: this.value,
+      autofill: false
     }
   },
   computed: {
     attrs () {
       return {
-        ...omit(this.$props, 'selectOnFocus', 'composition', 'value', 'clearable'),
+        ...omit(this.$props, 'placeholder', 'selectOnFocus', 'composition', 'value', 'clearable'),
         name: this.realName,
         disabled: this.realDisabled,
         readonly: this.realReadonly,
@@ -103,9 +106,6 @@ export default {
     },
     listeners () {
       return getListeners(EVENTS, this)
-    },
-    isOldVersion () {
-      return !('placeholder' in document.createElement('input'))
     },
     editable () {
       return !this.realDisabled && !this.realReadonly
@@ -124,6 +124,10 @@ export default {
   },
   methods: {
     handleInput ($event) {
+      try {
+        this.autofill = !!this.$el.querySelector(':-webkit-autofill')
+      } catch (e) {}
+
       // 分3种情况
       // 1. 感知输入法，触发原生 input 事件就必须向上继续抛出
       // 2. 不感知输入法

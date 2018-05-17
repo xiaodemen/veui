@@ -7,7 +7,7 @@
   :aria-disabled="String(realDisabled)">
   <veui-button
     :class="{
-      'veui-button-selected': value.indexOf(item.value) !== -1
+      'veui-button-selected': localValue.indexOf(item.value) !== -1
     }"
     :ui="inheritedUi"
     v-for="(item, index) in items"
@@ -15,10 +15,10 @@
     :disabled="item.disabled || realDisabled || realReadonly"
     @click="handleChange(item.value)"
     role="option"
-    :aria-selected="String(value.indexOf(item.value) !== -1)"
+    :aria-selected="String(localValue.indexOf(item.value) !== -1)"
     :aria-posinset="index + 1"
     :aria-setsize="items.length">
-    <slot v-bind="item">{{ item.label }}</slot>
+    <slot v-bind="item" :index="index">{{ item.label }}</slot>
   </veui-button>
 </div>
 </template>
@@ -40,16 +40,31 @@ export default {
   },
   props: {
     items: Array,
-    value: Array
+    value: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  data () {
+    return {
+      localValue: this.value
+    }
+  },
+  watch: {
+    value (val) {
+      this.localValue = val || []
+    }
   },
   methods: {
     handleChange (val) {
-      if (!includes(this.value, val)) {
-        this.value.push(val)
+      if (!includes(this.localValue, val)) {
+        this.localValue.push(val)
       } else {
-        this.value.splice(findIndex(this.value, item => item === val), 1)
+        this.localValue.splice(findIndex(this.localValue, item => item === val), 1)
       }
-      this.$emit('change', this.value)
+      this.$emit('change', this.localValue)
     }
   }
 }

@@ -2,6 +2,7 @@
 <div class="veui-textarea" :class="{
     'veui-textarea-focused': focused,
     'veui-textarea-rows': normalizedRows > 0,
+    'veui-input-invalid': realInvalid,
     'veui-readonly': realReadonly,
     'veui-disabled': realDisabled
   }" :ui="ui">
@@ -40,6 +41,7 @@ import { pick } from 'lodash'
 import ui from '../mixins/ui'
 import input from '../mixins/input'
 import { getListeners } from '../utils/helper'
+import { log10 } from '../utils/math'
 
 const EVENTS = ['click', 'keyup', 'keydown', 'keypress']
 
@@ -60,7 +62,7 @@ export default {
   },
   data () {
     return {
-      localValue: this.value,
+      localValue: this.value || '',
       focused: false,
       height: 0,
       measurerContentWidth: 0,
@@ -89,9 +91,6 @@ export default {
       return this.localValue.split('\n').map(line => line || `\u200b${line}`)
     },
     digits () {
-      const log10 = Math.log10 || function (x) {
-        return Math.log(x) * Math.LOG10E
-      }
       return Math.floor(log10(this.lines.length)) + 1
     },
     lineNumberWidth () {
@@ -107,7 +106,7 @@ export default {
   },
   watch: {
     value (val) {
-      this.localValue = val
+      this.localValue = val || ''
     },
     localValue: {
       handler () {

@@ -5,7 +5,7 @@
     :ui="ui"
     ref="box"
     :style="{zIndex}"
-    v-show="open">
+    v-show="realOpen">
     <slot/>
   </div>
 </div>
@@ -50,14 +50,14 @@ export default {
   },
   data () {
     return {
-      zIndex: 0,
+      zIndex: null,
       appendBody: false,
       targetNode: null,
       source: null
     }
   },
   watch: {
-    open (value) {
+    realOpen (value) {
       this.updateOverlayDOM()
       this.updateNode()
       if (value) {
@@ -85,15 +85,20 @@ export default {
     this.updateNode()
   },
   mounted () {
-    const box = this.$refs.box
-    document.body.appendChild(box)
+    this.overlayBox = this.$refs.box
+    document.body.appendChild(this.overlayBox)
 
-    if (this.open) {
+    if (this.realOpen) {
       this.initFocus()
     }
 
     this.findTargetNode()
     this.updateOverlayDOM()
+  },
+  computed: {
+    realOpen () {
+      return this.zIndex !== null && this.open
+    }
   },
   methods: {
     // 更新 zindex 树
@@ -122,13 +127,13 @@ export default {
     },
 
     updateOverlayDOM () {
-      if (!this.open) {
+      if (!this.realOpen) {
         return
       }
 
       if (this.targetNode) {
         let options = assign({}, this.options, {
-          element: this.$refs.box,
+          element: this.overlayBox,
           target: this.targetNode
         })
 
@@ -175,7 +180,7 @@ export default {
       }
 
       if (!this.focusContext) {
-        this.focusContext = focusManager.createContext(this.$refs.box, {
+        this.focusContext = focusManager.createContext(this.overlayBox, {
           source: document.activeElement,
           trap: this.modal
         })
@@ -191,7 +196,7 @@ export default {
       }
     }
   },
-  beforeDestroy () {
+  destroyed () {
     this.tether && this.tether.destroy()
     this.tether = null
 
@@ -202,7 +207,8 @@ export default {
 
     this.destroyFocus()
 
-    this.$refs.box.parentNode.removeChild(this.$refs.box)
+    this.overlayBox.parentNode.removeChild(this.overlayBox)
+    this.overlayBox = null
   }
 }
 </script>

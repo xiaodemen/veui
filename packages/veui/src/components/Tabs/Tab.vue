@@ -1,14 +1,19 @@
 <template>
 <div class="veui-tab" v-show="isActive" role="tabpanel" :aria-hidden="String(!isActive)">
-  <slot v-if="isInited || isActive"/>
+  <slot v-if="isInited || isActive">
+    <router-view v-if="to && to === $route.fullPath"/>
+  </slot>
 </div>
 </template>
 
 <script>
-import { pick, find, uniqueId } from 'lodash'
+import { pick, find, uniqueId, includes } from 'lodash'
 import { getTypedAncestorTracker } from '../../utils/helper'
 import { getIndexOfType } from '../../utils/context'
+import warn from '../../utils/warn'
 import '../../common/uiTypes'
+
+const STATUS_LIST = ['success', 'warning', 'info', 'error']
 
 export default {
   name: 'veui-tab',
@@ -32,6 +37,13 @@ export default {
     removable: {
       type: Boolean,
       default: false
+    },
+    status: {
+      type: String,
+      default: null,
+      validator (val) {
+        return includes(STATUS_LIST, val)
+      }
     }
   },
   data () {
@@ -48,11 +60,15 @@ export default {
   created () {
     let index = getIndexOfType(this, 'tab')
 
-    const props = ['label', 'disabled', 'to', 'native', 'removable']
+    const props = ['label', 'disabled', 'to', 'native', 'removable', 'status']
+
+    if (this.to && this.name) {
+      warn('[veui-tab] prop `name` will be ignored when prop `to` is set.')
+    }
 
     this.tabs.add({
       ...pick(this, ...props, 'id'),
-      name: this.name || this.to || this.id,
+      name: this.to || this.name || this.id,
       index
     })
 

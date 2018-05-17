@@ -6,9 +6,10 @@
   }"
   :ui="ui">
   <input
+    ref="box"
     type="radio"
     v-bind="attrs"
-    @change="localChecked = $event.target.checked"
+    @change="handleChange"
     v-on="listeners">
   <span class="veui-radio-box"></span>
   <span class="veui-radio-label"><slot/></span>
@@ -19,16 +20,16 @@
 import ui from '../mixins/ui'
 import input from '../mixins/input'
 import { getListeners } from '../utils/helper'
+import { focus } from '../utils/dom'
 
-const EVENTS = ['keyup', 'keydown', 'keypress', 'focus', 'blur']
+const EVENTS = ['click', 'keyup', 'keydown', 'keypress', 'focus', 'blur']
 
 export default {
   name: 'veui-radio',
   inheritAttrs: false,
   mixins: [ui, input],
   model: {
-    prop: 'model',
-    event: 'change'
+    prop: 'model'
   },
   props: {
     value: {
@@ -70,7 +71,7 @@ export default {
         }
 
         if (val) {
-          this.$emit('change', this.value)
+          this.$emit('input', this.value)
         }
       },
       immediate: true
@@ -82,6 +83,19 @@ export default {
         }
       },
       immediate: true
+    }
+  },
+  methods: {
+    handleChange ($event) {
+      this.localChecked = $event.target.checked
+      this.$emit('change', this.localChecked)
+    },
+    focus ({ visible = false }) {
+      if (visible) {
+        focus(this.$refs.box)
+      } else {
+        this.$refs.box.focus()
+      }
     }
   }
 }

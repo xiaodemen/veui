@@ -1,5 +1,6 @@
 <template>
-<label :class="{
+<label
+  :class="{
     'veui-checkbox': true,
     'veui-disabled': realReadonly || realDisabled
   }"
@@ -11,8 +12,12 @@
     @change="handleChange"
     v-on="listeners">
   <span class="veui-checkbox-box">
-    <veui-icon
-      :name="icons[localIndeterminate ? 'indeterminate' : 'checked']"/>
+    <transition name="veui-checkbox-icon">
+      <veui-icon v-if="localIndeterminate" :name="icons.indeterminate"/>
+    </transition>
+    <transition name="veui-checkbox-icon">
+      <veui-icon v-if="localChecked && !localIndeterminate" :name="icons.checked"/>
+    </transition>
   </span>
   <span class="veui-checkbox-label"><slot/></span>
 </label>
@@ -23,9 +28,9 @@ import Icon from './Icon'
 import input from '../mixins/input'
 import ui from '../mixins/ui'
 import { getListeners } from '../utils/helper'
-import { patchIndeterminate } from '../utils/dom'
+import { patchIndeterminate, focus } from '../utils/dom'
 
-const EVENTS = ['keyup', 'keydown', 'keypress', 'focus', 'blur']
+const EVENTS = ['click', 'keyup', 'keydown', 'keypress', 'focus', 'blur']
 
 export default {
   name: 'veui-checkbox',
@@ -35,8 +40,7 @@ export default {
   },
   mixins: [ui, input],
   model: {
-    prop: 'checked',
-    event: 'change'
+    prop: 'model'
   },
   props: {
     trueValue: {
@@ -47,11 +51,9 @@ export default {
       type: null,
       default: false
     },
-    checked: {
-      type: null,
-      default: false
-    },
-    indeterminate: Boolean
+    checked: Boolean,
+    indeterminate: Boolean,
+    model: null
   },
   data () {
     return {
@@ -64,15 +66,42 @@ export default {
       return {
         name: this.realName,
         disabled: this.realDisabled || this.realReadonly,
-        checked: this.isChecked,
+        checked: this.localChecked,
         ...this.$attrs
       }
     },
-    isChecked () {
-      return this.localChecked === this.trueValue
-    },
     listeners () {
       return getListeners(EVENTS, this)
+    }
+  },
+  watch: {
+    checked (val) {
+      this.localChecked = val
+    },
+    localChecked  (val) {
+      if (this.checked !== val) {
+        this.$emit('update:checked', val)
+      }
+
+      this.$emit('input', val ? this.trueValue : this.falseValue)
+    },
+    model: {
+      handler (val) {
+        if (typeof val === 'undefined') {
+          return
+        }
+        this.localChecked = val === this.trueValue
+      },
+      immediate: true
+    },
+    indeterminate (val) {
+      this.localIndeterminate = val
+    },
+    localIndeterminate (val) {
+      this.$refs.box.indeterminate = val
+      if (this.indeterminate !== val) {
+        this.$emit('update:indeterminate', false)
+      }
     }
   },
   methods: {
@@ -86,27 +115,16 @@ export default {
       } else {
         this.toggleChecked()
       }
+      this.$emit('change', this.localChecked)
     },
     toggleChecked () {
-      this.localChecked = this.isChecked ? this.falseValue : this.trueValue
-    }
-  },
-  watch: {
-    indeterminate (val) {
-      this.localIndeterminate = val
+      this.localChecked = !this.localChecked
     },
-    checked (val) {
-      this.localChecked = val
-    },
-    localIndeterminate (val) {
-      this.$refs.box.indeterminate = val
-      if (this.indeterminate !== val) {
-        this.$emit('update:indeterminate', false)
-      }
-    },
-    localChecked (val) {
-      if (this.checked !== val) {
-        this.$emit('change', val)
+    focus ({ visible = false }) {
+      if (visible) {
+        focus(this.$refs.box)
+      } else {
+        this.$refs.box.focus()
       }
     }
   },
