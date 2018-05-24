@@ -1,6 +1,6 @@
 {
   "name": "veui-theme-one",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "description": "One Design theme for VEUI.",
   "keywords": [
     "veui",
@@ -20,7 +20,7 @@
     "less-plugin-est": "^2.0.5"
   },
   "peerDependencies": {
-    "veui": "1.0.0-alpha.12"
+    "veui": "1.0.0-alpha.13"
   },
   "devDependencies": {
     "stylelint": "^8.4.0",

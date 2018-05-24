@@ -21,11 +21,12 @@
       <transition-group
         tag="div"
         :class="{
-          'veui-tabs-list-resizer': true,
-          'veui-tabs-list-resizer-moving': conMoving
+          'veui-tabs-list-wrapper': true,
+          'veui-tabs-list-wrapper-moving': conMoving
         }"
         ref="listContainer"
-        name="tab-list"
+        name="veui-tab"
+        @before-leave="beforeLeave"
         @leave="leave"
         @after-leave="afterLeave"
       >
@@ -211,6 +212,9 @@ export default {
     maxTranslate () {
       return this.menuClientWidth - this.tabConClientWidth
     },
+    needTransition () {
+      return this.inited && this.transitionSupported && this.uiProps.style === 'block'
+    },
     ariaAttrs () {
       return this.items.map((tab, index) => {
         return {
@@ -266,10 +270,6 @@ export default {
           tabItem.querySelector('.veui-tabs-item-remove').addEventListener('transitionend', end)
         }
       })
-
-      if (this.inited) {
-        this.$nextTick(() => this.listResizeHandler())
-      }
     },
 
     removeById (id) {
@@ -297,24 +297,27 @@ export default {
         return
       }
 
-      items.splice(index, 1)
-
-      if (items.length) {
-        let temp = this.localIndex
-        // 删激活中的第一个要往后找，删当前激活后边的，index 都不需要改
-        if (!(index === 0 && index === this.localIndex) && index <= this.localIndex) {
-          this.localIndex = this.localIndex - 1
-        }
-        // 删当前激活的，要更新激活信息
-        if (index === temp) {
-          this.localActive = this.items[this.localIndex].name
-          this.activeId = this.items[this.localIndex].id
+      let needFixed = false
+      if (items.length > 1) {
+        needFixed = (index === this.localIndex && index === 0) || index < this.localIndex
+        if (index === this.localIndex) {
+          let item = items[this.localIndex - 1] || items[this.localIndex + 1]
+          this.localIndex = items.indexOf(item)
+          this.localActive = item.name
+          this.activeId = item.id
         }
       } else {
         this.localIndex = null
         this.localActive = null
         this.activeId = null
       }
+
+      this.$nextTick(() => {
+        items.splice(index, 1)
+        if (needFixed) {
+          this.localIndex -= 1
+        }
+      })
     },
 
     setActive ({active, index}) {
@@ -508,6 +511,10 @@ export default {
           // 减少 tab 留白和滚动误差带来的影响，三分之二宽度在视窗内才不会被保留在下个视窗中
           if (left >
             (this.menuLeft - (tab.offsetWidth + parseFloat(marginLeft) + parseFloat(marginRight)) / 3)) {
+            if (index === 0) {
+              // 第一个就满足条件，说明边界离第一个很近，往左只能在第一个的内部滚了
+              former = -1
+            }
             return true
           }
 
@@ -515,10 +522,10 @@ export default {
           return false
         })
 
-        // 视窗太窄
         if (former != null) {
+          // 视窗太窄或者只需要滚动一点点
           if (former === -1) {
-            // 并且视窗在第一个
+            // 视窗在第一个或者只需要滚动一点点
             localTranslate = localMaxTranslate
           } else {
             // 视窗在中间
@@ -552,6 +559,10 @@ export default {
           // 同向左滚动
           if (right <
             (this.menuRightStable + (tab.offsetWidth + parseFloat(marginLeft) + parseFloat(marginRight)) / 3)) {
+            if (index === 0) {
+              // 最后一个就满足条件，说明边界离最后一个很近，往右只能在最后一个的内部滚了
+              former = this.items.length
+            }
             return true
           }
 
@@ -559,10 +570,10 @@ export default {
           return false
         })
 
-        // 视窗太窄
         if (former != null) {
+          // 视窗太窄或者只需要滚动一点点
           if (former === this.items.length) {
-            // 并且视窗在最后一个
+            // 视窗在最后一个或者只需要滚动一点点
             localTranslate = localMaxTranslate
           } else {
             // 视窗在中间
@@ -634,14 +645,21 @@ export default {
       tabs.forEach(tab => setTransform(tab, `translate(${distance}px)`))
     },
 
-    leave (el) {
-      if (!this.inited || !this.transitionSupported || this.uiProps.style !== 'block') {
+    beforeLeave (el) {
+      if (!this.needTransition) {
         return
       }
 
       this.menuMoving = true
       this.conMoving = true
       this.itemMoving = true
+    },
+
+    leave (el) {
+      if (!this.needTransition) {
+        return
+      }
+
       // 若产生子元素局部动画，要把局部的状态收敛到父元素上
       this.fixedTranslate = null
       this.fixedTabs = null
@@ -713,12 +731,14 @@ export default {
         })
       }
     },
+
     afterLeave () {
-      if (!this.transitionSupported || this.uiProps.style !== 'block') {
+      if (!this.needTransition) {
         this.$nextTick(() => {
           this.removing = false
           this.listResizeHandler()
         })
+        return
       }
 
       // 动画结束后收敛 transform
